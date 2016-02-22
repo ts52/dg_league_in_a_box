@@ -3,5 +3,6 @@
 <!-- When the admin has 'opened up sign in', this page will show the sign in -->
 <!-- After sign in is closed, this page will switch to score entry -->
 <?php
+	$db_file = './db_league.db';
 	include 'db_setup.php';
 ?>

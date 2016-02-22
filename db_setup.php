@@ -1,6 +1,6 @@
 <?php
 	// Open DB and set up tables if they don't already exist
-	$db = new SQLite3('dg_league.db') or die('Unable to open database');
+	$db = new SQLite3($db_file) or die('Unable to open database');
 
 	$user_table_create = <<<EOD
 	   CREATE TABLE IF NOT EXISTS players (
@@ -14,6 +14,7 @@ EOD;
 	$config_table_create = <<<EOD
 	    CREATE TABLE IF NOT EXISTS config (
 		week INTEGER,
+		check_in_open BOOLEAN,
 		amount_to_payout DOUBLE,
 		amount_to_ace_pot DOUBLE,
 		amount_to_course DOUBLE,
