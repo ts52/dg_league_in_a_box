@@ -1,4 +1,5 @@
 <?php
+  // Before including tihs php file, set $db_file
 	// Open DB and set up tables if they don't already exist
 	$db = new SQLite3($db_file) or die('Unable to open database');
 
