@@ -6,7 +6,7 @@
 	$db_file = './dg_league.db';
 	include './db_setup.php';
   include './get_config.php';
-  if ($check_in_open == 'TRUE') {
+  if ($system_state == 'check_in_open') {
     print "<h3>Check in</h3>";
     print "<form action='check_in_search.php' method='post'>";
     print "Last Name: <input type='text' name='lastname'><br>";

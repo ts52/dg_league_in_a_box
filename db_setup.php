@@ -15,7 +15,7 @@ EOD;
 	$config_table_create = <<<EOD
 	    CREATE TABLE IF NOT EXISTS config (
 		week INTEGER,
-		check_in_open BOOLEAN,
+		system_state STRING,
 		hill_start_order STRING,
 		general_start_order STRING,
 		amount_to_payout DOUBLE,

@@ -7,7 +7,23 @@
 
 	print ('<form action="update_config.php" method="post">');
 	print ("Current Week Number: <input type='text' name='week' value=$week><br>");
-	print ("Check in open? (TRUE|FALSE): <input type='text' name='check_in_open' value=$check_in_open><br>");
+	print ("System State: <select type='text' name='system_state'>");
+  print ("<option value='check_in_open'");
+  if ($system_state == 'check_in_open') {
+    print (" selected");
+  }
+  print (">Check In Open</option>");
+  print ("<option value='score_entry'");
+  if ($system_state == 'score_entry') {
+    print (" selected");
+  }
+  print (">Score Entry</option>");
+  print ("<option value='closed'");
+  if ($system_state == 'closed') {
+    print (" selected");
+  }
+  print (">Closed</option>");
+  print ("</select><br>");
   print ("Hill start order configuration: <input type='text' name='hill_start_order' value=$hill_start_order><br>");
   print ("General start order configuration: <input type='text' name='general_start_order' value=$general_start_order><br>");
 	print ("Money to payout per player: <input type='text' name='amount_to_payout' value=$amount_to_payout><br>");

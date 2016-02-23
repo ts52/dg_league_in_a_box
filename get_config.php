@@ -2,7 +2,7 @@
   // Before including this php file
   // set $db_file, and include db_setup.php
 	$week = "";
-	$check_in_open = "";
+	$system_state = "";
   $hill_start_order = "";
   $general_start_order = "";
 	$amount_to_payout = "";
@@ -23,7 +23,7 @@
 	while ($row = $cq_ret->fetchArray(SQLITE3_ASSOC) ){
 		$row_count++;
 		$week = $row['week'];
-		$check_in_open = $row['check_in_open'];
+		$system_state = $row['system_state'];
     $hill_start_order = $row['hill_start_order'];
     $general_start_order = $row['general_start_order'];
 		$amount_to_payout = $row['amount_to_payout'];
