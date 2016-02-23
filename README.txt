@@ -37,3 +37,9 @@ cash distribution, week #, divisions, # places to pay out for each division, etc
 The admin/summary page includes all the information needed after the scores are all entered:
 	Top N players of each division, and payout amounts
 	All players for the night ranked by score for tag handouts.
+
+
+Notes from luke:
+need to be able to check in a group for the general (either luke or themselves)
+if not checking in as a group, get a 'waiting group', when the group is full, only then do you get the next hole.
+figure out starting hole sequences in config and check in

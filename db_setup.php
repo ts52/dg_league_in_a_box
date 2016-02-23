@@ -15,9 +15,12 @@ EOD;
 	    CREATE TABLE IF NOT EXISTS config (
 		week INTEGER,
 		check_in_open BOOLEAN,
+		hill_start_order STRING,
+		general_start_order STRING,
 		amount_to_payout DOUBLE,
 		amount_to_ace_pot DOUBLE,
 		amount_to_course DOUBLE,
+		amount_to_bonanza DOUBLE,
 		a_pool_payout_count INTEGER,
 		b_pool_payout_count INTEGER,
 		c_pool_payout_count INTEGER,
@@ -41,10 +44,10 @@ EOD;
 		start_hole INTEGER,
 		paid INTEGER,
 		score INTEGER,
+		handicap_score INTEGER,
 		points INTEGER,
 		place_in_pool INTEGER,
 		ace INTEGER,
-		skills INTEGER,
 		payout DOUBLE )
 EOD;
 	$db->exec($scores_table_create) or die('Create scores db failed');
