@@ -8,6 +8,7 @@
   include './get_config.php';
   if ($system_state == 'check_in_open') {
     print "<h3>Check in</h3>";
+    print "Current week is $week<br>";
     print "<form action='check_in_search.php' method='post'>";
     print "<input type='radio' name='course' value='hill'>The Hill</input>  ";
     print "<input type='radio' name='course' value='general'>The General</input><br>";

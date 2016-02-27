@@ -1,7 +1,7 @@
 <?php
 	$db_file = './dg_league.db';
 	include './db_setup.php';
-  include ',/get_config.php';
+  include './get_config.php';
 
   $playerid = $_POST['playerid'];
   $course = $_POST['course'];
@@ -17,20 +17,24 @@
     $pool = $row['pool'];
   }
 
-  $checked_in_player_query = "SELECT * from scores WHERE week IS :week AND course IS :course"
+  print "Checking $firstname $lastname in to the $course for week $week<br>";
+
+  $checked_in_player_query = "SELECT * from scores WHERE week IS :week AND course IS :course";
   $cipq_stmt = $db->prepare($checked_in_player_query);
   $cipq_stmt->bindParam(":week",$week);
   $cipq_stmt->bindParam(":course",$course);
   $cipq_ret = $cipq_stmt->execute();
-  $row_count = 0;
-  while ($row = $cipq_ret->ftechArray(SQLITE3_ASSOC) ){
-    $row_count++;
+  $player_count = 0;
+  while ($row = $cipq_ret->fetchArray(SQLITE3_ASSOC) ){
+    $player_count++;
   }
 
+  print "There are already $player_count players checked in to the $course<br>";
+
   if ($course == 'hill'){
-    $start_hole = $hill_start_array[$row_count];
+    $start_hole = $hill_start_array[$player_count];
   }elseif ($course == 'general'){
-    $start_hole = $general_start_array[$row_count];
+    $start_hole = $general_start_array[$player_count];
   }
 
 	$insert_sql = <<<EOF

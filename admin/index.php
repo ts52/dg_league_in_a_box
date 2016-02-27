@@ -3,7 +3,32 @@
 	include '../db_setup.php';
   include '../get_config.php';
 
-	print ('Current Configuration<br>');
+  print ("<h3>Checked in Players for week $week</h3>");
+  $player_count = 0;
+  $checked_in_players_query = "SELECT * from scores WHERE week IS :week";
+  $cipq_stmt = $db->prepare($checked_in_players_query);
+  $cipq_stmt->bindParam(":week",$week);
+  $cipq_ret = $cipq_stmt->execute();
+  while ($row = $cipq_ret->fetchArray(SQLITE3_ASSOC) ){
+    if ($player_count == 0){
+      print ("<table style='width:100%' border='1'>");
+      print ("<tr><td>Player</td><td>Pool</td><td>Course</td><td>Starting Hole</td></tr>");
+    }
+    $player_count++;
+    $firstname = $row['firstname'];
+    $lastname = $row['lastname'];
+    $pool = $row['pool'];
+    $course = $row['course'];
+    $start_hole = $row['start_hole'];
+    print ("<tr><td>$firstname $lastname</td><td>$pool</td><td>$course</td><td>$start_hole</td></tr>");
+  }
+  if ($player_count == 0){
+    print ("No players checked in for week $week<br>");
+  } else {
+    print ("</table>");
+  }
+
+	print ("<h3>Current Configuration</h3>");
 
 	print ('<form action="update_config.php" method="post">');
 	print ("Current Week Number: <input type='text' name='week' value=$week><br>");
@@ -38,6 +63,6 @@
 	print ("B pool General Handicap: <input type='text' name='b_pool_handicap' value=$b_pool_handicap><br>");
 	print ("C pool General Handicap: <input type='text' name='c_pool_handicap' value=$c_pool_handicap><br>");
 	print ("W pool General Handicap: <input type='text' name='w_pool_handicap' value=$w_pool_handicap><br>");
-	print ('<input type="submit" value="Submit">');
+	print ('<input type="submit" value="Update Config">');
 	print ('</form>');
 ?>
