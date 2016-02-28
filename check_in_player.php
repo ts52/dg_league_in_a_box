@@ -5,55 +5,73 @@
 
   $playerid = $_POST['playerid'];
   $course = $_POST['course'];
+  $incoming_tag = $_POST['incoming_tag'];
 
   $player_query = "SELECT * from players WHERE playerid IS :playerid";
   $pq_stmt = $db->prepare($player_query);
   $pq_stmt->bindParam(":playerid",$playerid);
   $pq_ret = $pq_stmt->execute();
 	while ($row = $pq_ret->fetchArray(SQLITE3_ASSOC) ){
-		$playerid = $row['playerid'];
 		$lastname = $row['lastname'];
 		$firstname = $row['firstname'];
     $pool = $row['pool'];
   }
 
-  print "Checking $firstname $lastname in to the $course for week $week<br>";
-
-  $checked_in_player_query = "SELECT * from scores WHERE week IS :week AND course IS :course";
-  $cipq_stmt = $db->prepare($checked_in_player_query);
-  $cipq_stmt->bindParam(":week",$week);
-  $cipq_stmt->bindParam(":course",$course);
-  $cipq_ret = $cipq_stmt->execute();
+  $player_query = "SELECT * from scores WHERE week IS :week AND playerid IS :playerid";
+  $pqq_stmt = $db->prepare($player_query);
+  $pqq_stmt->bindParam(":week",$week);
+  $pqq_stmt->bindParam(":playerid",$playerid);
+  $pqq_ret = $pqq_stmt->execute();
   $player_count = 0;
-  while ($row = $cipq_ret->fetchArray(SQLITE3_ASSOC) ){
+  while ($row = $pqq_ret->fetchArray(SQLITE3_ASSOC) ){
     $player_count++;
+    $course = $row['course'];
+    $start_hole = $row['start_hole'];
   }
 
-  print "There are already $player_count players checked in to the $course<br>";
+  print ("DEBUG: found $player_count players checked in with ID:$playerid<br>");
 
-  if ($course == 'hill'){
-    $start_hole = $hill_start_array[$player_count];
-  }elseif ($course == 'general'){
-    $start_hole = $general_start_array[$player_count];
-  }
+  if ($player_count != 0) {
+    print "$firstname $lastname is already checked in to the $course on hole $start_hole<br>";
+  } else {
+    print "Checking $firstname $lastname in to the $course for week $week<br>";
 
-	$insert_sql = <<<EOF
-		INSERT INTO scores 
-		    (playerid,lastname,firstname,pool,week,course,incoming_tag,start_hole)
-		    VALUES
-		    (:playerid,:lastname,:firstname,:pool,:week,:course,:incoming_tag,:start_hole);
+    $checked_in_player_query = "SELECT * from scores WHERE week IS :week AND course IS :course";
+    $cipq_stmt = $db->prepare($checked_in_player_query);
+    $cipq_stmt->bindParam(":week",$week);
+    $cipq_stmt->bindParam(":course",$course);
+    $cipq_ret = $cipq_stmt->execute();
+    $player_count = 0;
+    while ($row = $cipq_ret->fetchArray(SQLITE3_ASSOC) ){
+      $player_count++;
+    }
+
+    print "There are already $player_count players checked in to the $course<br>";
+
+    if ($course == 'hill'){
+      $start_hole = $hill_start_array[$player_count];
+    }elseif ($course == 'general'){
+      $start_hole = $general_start_array[$player_count];
+    }
+
+    $insert_sql = <<<EOF
+      INSERT INTO scores 
+          (playerid,lastname,firstname,pool,week,course,incoming_tag,start_hole)
+          VALUES
+          (:playerid,:lastname,:firstname,:pool,:week,:course,:incoming_tag,:start_hole);
 EOF;
-	$add_player_stmt = $db->prepare($insert_sql);
+    $add_player_stmt = $db->prepare($insert_sql);
 
-	$add_player_stmt->bindParam(":playerid", $playerid);
-	$add_player_stmt->bindParam(":lastname", $lastname);
-	$add_player_stmt->bindParam(":firstname", $firstname);
-	$add_player_stmt->bindParam(":pool", $pool);
-	$add_player_stmt->bindParam(":week", $week);
-	$add_player_stmt->bindParam(":course", $course);
-	$add_player_stmt->bindParam(":incoming_tag", $incoming_tag);
-	$add_player_stmt->bindParam(":start_hole", $start_hole);
-	$add_player_stmt->execute();
-	print ("Player $firstname $lastname checked in to the $course<br>");
-  print ("Your start hole is $start_hole.<br>");
+    $add_player_stmt->bindParam(":playerid", $playerid);
+    $add_player_stmt->bindParam(":lastname", $lastname);
+    $add_player_stmt->bindParam(":firstname", $firstname);
+    $add_player_stmt->bindParam(":pool", $pool);
+    $add_player_stmt->bindParam(":week", $week);
+    $add_player_stmt->bindParam(":course", $course);
+    $add_player_stmt->bindParam(":incoming_tag", $incoming_tag);
+    $add_player_stmt->bindParam(":start_hole", $start_hole);
+    $add_player_stmt->execute();
+    print ("Player $firstname $lastname checked in to the $course<br>");
+    print ("Your start hole is $start_hole.<br>");
+  }
 ?>

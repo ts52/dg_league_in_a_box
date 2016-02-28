@@ -2,6 +2,15 @@
 	$db_file = '../dg_league.db';
 	include '../db_setup.php';
   include '../get_config.php';
+  print ("<style>\n");
+  print ("table, th, td {\n");
+  print ("border: 1px solid black;\n");
+  print ("border-collapse: collapse;\n"); 
+  print ("}\n");
+  print ("th, td {\n");
+  print ("padding: 7px;\n");
+  print ("}\n");
+  print ("</style>");
 
   print ("<h3>Checked in Players for week $week</h3>");
   $player_count = 0;
@@ -11,16 +20,64 @@
   $cipq_ret = $cipq_stmt->execute();
   while ($row = $cipq_ret->fetchArray(SQLITE3_ASSOC) ){
     if ($player_count == 0){
-      print ("<table style='width:100%' border='1'>");
-      print ("<tr><td>Player</td><td>Pool</td><td>Course</td><td>Starting Hole</td></tr>");
+      print ("<table border='1'>");
+      print ("<tr><td>Player</td><td>Pool</td><td>Course</td><td>Starting Hole</td><td>Tag#</td><td></td></tr>");
     }
     $player_count++;
+    $playerid = $row['playerid'];
     $firstname = $row['firstname'];
     $lastname = $row['lastname'];
     $pool = $row['pool'];
     $course = $row['course'];
+    $incoming_tag = $row['incoming_tag'];
     $start_hole = $row['start_hole'];
-    print ("<tr><td>$firstname $lastname</td><td>$pool</td><td>$course</td><td>$start_hole</td></tr>");
+    print ("<form action='update_checked_in_player.php' method='post'>");
+    print ("<input type='text' name='playerid' value=$playerid hidden>");
+    print ("<tr><td>$firstname $lastname</td>");
+    print ("<td>");
+    print ("<select type='text' name='pool'>");
+    print ("<option value='A'");
+    if ( $pool == "A" ) {
+      print (" selected");
+    }
+    print (">A</option>");
+    print ("<option value='B'");
+    if ( $pool == "B" ) {
+      print (" selected");
+    }
+    print (">B</option>");
+    print ("<option value='C'");
+    if ( $pool == "C" ) {
+      print (" selected");
+    }
+    print (">C</option>");
+    print ("</td>");
+
+    print ("<td>");
+    print ("<select type='text' name='course'>");
+    print ("<option value='hill'");
+    if ( $pool == "hill" ) {
+      print (" selected");
+    }
+    print (">hill</option>");
+    print ("<option value='general'");
+    if ( $pool == "general" ) {
+      print (" selected");
+    }
+    print (">general</option>");
+    print ("</td>");
+
+    print ("<td>");
+    print ("<input type='text' name='start_hole' value=$start_hole>");
+    print ("</td>");
+
+    print ("<td>");
+    print ("<input type='text' name='incoming_tag' value=$incoming_tag>");
+    print ("</td>");
+
+    print ("<td><input type='submit' value='Update'</td>");
+    print ("</tr>");
+    print ("</form>");
   }
   if ($player_count == 0){
     print ("No players checked in for week $week<br>");
