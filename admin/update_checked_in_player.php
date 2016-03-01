@@ -21,7 +21,7 @@
 		$firstname = $row['firstname'];
   }
 
-  print "Updating ID:$playerid $firstname $lastname to the $course, starting hole $start_hole, $pool pool, for week $week<br>";
+  print "Updating ID:$playerid $firstname $lastname to the $course, starting hole $start_hole, $pool pool, incoming tag $incoming_tag, for week $week<br>";
 
   $checked_in_player_query = "SELECT * from scores WHERE week IS :week AND start_hole IS :start_hole";
   $cipq_stmt = $db->prepare($checked_in_player_query);
