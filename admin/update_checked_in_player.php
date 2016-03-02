@@ -9,6 +9,12 @@
   $start_hole = $_POST['start_hole'];
   $incoming_tag = $_POST['incoming_tag'];
   $paid = $_POST['paid'];
+  $score = $_POST['score'];
+  $handicap_score = $_POST['handicap_score'];
+  $ace = $_POST['ace'];
+  $points = $_POST['points'];
+  $payout = $_POST['payout'];
+  $place_in_pool = $_POST['place_in_pool'];
 
   // Check to make sure hole isn't full, then update scores table
 
@@ -41,7 +47,8 @@
   } else {
     $update_sql = <<<EOF
       UPDATE scores 
-          SET pool=:pool,course=:course,incoming_tag=:incoming_tag,start_hole=:start_hole,paid=:paid
+          SET pool=:pool,course=:course,incoming_tag=:incoming_tag,start_hole=:start_hole,paid=:paid,
+              score=:score,handicap_score=:handicap_score,ace=:ace,points=:points,payout=:payout,place_in_pool=:place_in_pool
           WHERE week IS :week AND playerid IS :playerid;
 EOF;
     $update_player_stmt = $db->prepare($update_sql);
@@ -53,6 +60,12 @@ EOF;
     $update_player_stmt->bindParam(":incoming_tag", $incoming_tag);
     $update_player_stmt->bindParam(":start_hole", $start_hole);
     $update_player_stmt->bindParam(":paid", $paid);
+    $update_player_stmt->bindParam(":score", $score);
+    $update_player_stmt->bindParam(":handicap_score", $handicap_score);
+    $update_player_stmt->bindParam(":ace", $ace);
+    $update_player_stmt->bindParam(":points", $points);
+    $update_player_stmt->bindParam(":payout", $payout);
+    $update_player_stmt->bindParam(":place_in_pool", $place_in_pool);
     $update_player_stmt->execute();
     print ("Player $firstname $lastname checked in to the $course<br>");
   }
