@@ -8,6 +8,7 @@
   $pool = $_POST['pool'];
   $start_hole = $_POST['start_hole'];
   $incoming_tag = $_POST['incoming_tag'];
+  $paid = $_POST['paid'];
 
   // Check to make sure hole isn't full, then update scores table
 
@@ -21,7 +22,7 @@
 		$firstname = $row['firstname'];
   }
 
-  print "Updating ID:$playerid $firstname $lastname to the $course, starting hole $start_hole, $pool pool, incoming tag $incoming_tag, for week $week<br>";
+  print "Updating ID:$playerid $firstname $lastname to the $course, starting hole $start_hole, $pool pool, incoming tag $incoming_tag, paid $paid, for week $week<br>";
 
   $checked_in_player_query = "SELECT * from scores WHERE week IS :week AND start_hole IS :start_hole";
   $cipq_stmt = $db->prepare($checked_in_player_query);
@@ -40,7 +41,7 @@
   } else {
     $update_sql = <<<EOF
       UPDATE scores 
-          SET pool=:pool,course=:course,incoming_tag=:incoming_tag,start_hole=:start_hole
+          SET pool=:pool,course=:course,incoming_tag=:incoming_tag,start_hole=:start_hole,paid=:paid
           WHERE week IS :week AND playerid IS :playerid;
 EOF;
     $update_player_stmt = $db->prepare($update_sql);
@@ -51,6 +52,7 @@ EOF;
     $update_player_stmt->bindParam(":course", $course);
     $update_player_stmt->bindParam(":incoming_tag", $incoming_tag);
     $update_player_stmt->bindParam(":start_hole", $start_hole);
+    $update_player_stmt->bindParam(":paid", $paid);
     $update_player_stmt->execute();
     print ("Player $firstname $lastname checked in to the $course<br>");
   }

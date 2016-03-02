@@ -21,7 +21,7 @@
   while ($row = $cipq_ret->fetchArray(SQLITE3_ASSOC) ){
     if ($player_count == 0){
       print ("<table border='1'>");
-      print ("<tr><td>Player</td><td>Pool</td><td>Course</td><td>Starting Hole</td><td>Tag#</td><td></td></tr>");
+      print ("<tr><td>Player</td><td>Pool</td><td>Course</td><td>Starting Hole</td><td>Tag#</td><td>Paid</td><td></td></tr>");
     }
     $player_count++;
     $playerid = $row['playerid'];
@@ -31,6 +31,7 @@
     $course = $row['course'];
     $incoming_tag = $row['incoming_tag'];
     $start_hole = $row['start_hole'];
+    $paid = $row['paid'];
     print ("<form action='update_checked_in_player.php' method='post'>");
     print ("<input type='text' name='playerid' value=$playerid hidden>");
     print ("<tr><td>$firstname $lastname</td>");
@@ -56,12 +57,12 @@
     print ("<td>");
     print ("<select type='text' name='course'>");
     print ("<option value='hill'");
-    if ( $pool == "hill" ) {
+    if ( $course == "hill" ) {
       print (" selected");
     }
     print (">hill</option>");
     print ("<option value='general'");
-    if ( $pool == "general" ) {
+    if ( $course == "general" ) {
       print (" selected");
     }
     print (">general</option>");
@@ -73,6 +74,10 @@
 
     print ("<td>");
     print ("<input type='text' name='incoming_tag' value=$incoming_tag>");
+    print ("</td>");
+
+    print ("<td>");
+    print ("<input type='text' name='paid' value=$paid>");
     print ("</td>");
 
     print ("<td><input type='submit' value='Update'</td>");
