@@ -90,7 +90,7 @@
       if ($row_count == 0){
         print "<form action='update_scores.php' method='post'>\n";
         print "<table border='1'>\n";
-        print "<tr><td>Player</td><td>Pool</td><td>Score</td></tr>\n";
+        print "<tr><td>Player</td><td>Pool</td><td>Score</td><td>Ace Hole</td></tr>\n";
       }
       $playerid = $row['playerid'];
       $firstname = $row['firstname'];
@@ -101,7 +101,9 @@
       print "<input type='hidden' name=$playerid_name value=$playerid >\n";
       $score_name = "score$row_count";
       print "<tr><td>$firstname $lastname</td><td>$pool</td>\n";
-      print "<td><input type='text' name=$score_name></td></tr>\n";
+      print "<td><input type='text' name=$score_name></td>\n";
+      $ace_name = "ace$row_count";
+      print "<td><input type='text' name=$ace_name></td></tr>\n";
       $row_count++;
     }
     if ($row_count > 0) {

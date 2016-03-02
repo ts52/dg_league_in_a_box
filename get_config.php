@@ -43,4 +43,14 @@
 	}
   $hill_start_array = explode ( ',', $hill_start_order );
   $general_start_array = explode ( ',', $general_start_order );
+  $payout_count = array();
+  $payout_count['A'] = $a_pool_payout_count;
+  $payout_count['B'] = $b_pool_payout_count;
+  $payout_count['C'] = $c_pool_payout_count;
+  $payout_count['W'] = $w_pool_payout_count;
+  $handicap = array();
+  $handicap['A'] = $a_pool_handicap;
+  $handicap['B'] = $b_pool_handicap;
+  $handicap['C'] = $c_pool_handicap;
+  $handicap['W'] = $w_pool_handicap;
 ?>
