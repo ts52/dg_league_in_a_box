@@ -24,6 +24,8 @@ EOD;
 		amount_to_ace_pot DOUBLE,
 		amount_to_course DOUBLE,
 		amount_to_bonanza DOUBLE,
+    current_ace_pot DOUBLE,
+    max_ace_pot DOUBLE,
 		a_pool_payout_count INTEGER,
 		b_pool_payout_count INTEGER,
 		c_pool_payout_count INTEGER,

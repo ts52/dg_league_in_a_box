@@ -11,6 +11,8 @@
 	$amount_to_ace_pot = 0.75;
 	$amount_to_course = 1;
 	$amount_to_bonanza = 1;
+  $current_ace_pot = 0;
+  $max_ace_pot = 250;
 	$a_pool_payout_count = 5;
 	$b_pool_payout_count = 5;
 	$c_pool_payout_count = 5;
@@ -32,6 +34,8 @@
 		$amount_to_ace_pot = $row['amount_to_ace_pot'];
 		$amount_to_course = $row['amount_to_course'];
 		$amount_to_bonanza = $row['amount_to_bonanza'];
+    //$current_ace_pot = $row['current_ace_pot'];
+    //$max_ace_pot = $row['max_ace_pot'];
 		$a_pool_payout_count = $row['a_pool_payout_count'];
 		$b_pool_payout_count = $row['b_pool_payout_count'];
 		$c_pool_payout_count = $row['c_pool_payout_count'];
