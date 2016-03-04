@@ -7,6 +7,10 @@
   $course = $_POST['course'];
   $incoming_tag = $_POST['incoming_tag'];
 
+  if (empty($incoming_tag)){
+    $incoming_tag = 9999;
+  }
+
   $player_query = "SELECT * from players WHERE playerid IS :playerid";
   $pq_stmt = $db->prepare($player_query);
   $pq_stmt->bindParam(":playerid",$playerid);

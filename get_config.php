@@ -21,6 +21,8 @@
 	$b_pool_handicap = 6;
 	$c_pool_handicap = 6;
 	$w_pool_handicap = 6;
+  $a_pool_payout_schedule = $b_pool_payout_schedule = $c_pool_payout_schedule = "3,3.6,5.4,7.8,11.1";
+  $w_pool_payout_schedule = "2,3.2,5.2";
 	$config_query = "SELECT * from config;";
 	$cq_ret = $db->query($config_query);
 	$row_count = 0;
@@ -40,6 +42,10 @@
 		$b_pool_payout_count = $row['b_pool_payout_count'];
 		$c_pool_payout_count = $row['c_pool_payout_count'];
 		$w_pool_payout_count = $row['w_pool_payout_count'];
+		//$a_pool_payout_schedule = $row['a_pool_payout_schedule'];
+		//$b_pool_payout_schedule = $row['b_pool_payout_schedule'];
+		//$c_pool_payout_schedule = $row['c_pool_payout_schedule'];
+		//$w_pool_payout_schedule = $row['w_pool_payout_schedule'];
 		$a_pool_handicap = $row['a_pool_handicap'];
 		$b_pool_handicap = $row['b_pool_handicap'];
 		$c_pool_handicap = $row['c_pool_handicap'];
@@ -57,4 +63,9 @@
   $handicap['B'] = $b_pool_handicap;
   $handicap['C'] = $c_pool_handicap;
   $handicap['W'] = $w_pool_handicap;
+  $pool_payout_schedule = array();
+  $pool_payout_schedule['A'] = explode ( ',', $a_pool_payout_schedule );
+  $pool_payout_schedule['B'] = explode ( ',', $b_pool_payout_schedule );
+  $pool_payout_schedule['C'] = explode ( ',', $c_pool_payout_schedule );
+  $pool_payout_schedule['W'] = explode ( ',', $w_pool_payout_schedule );
 ?>

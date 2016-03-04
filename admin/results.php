@@ -19,12 +19,14 @@
   $player_count = 0;
   $players_per_pool = array ('A' => 0, 'B' => 0, 'C' => 0, 'W' => 0);
   $ace_count = 0;
-  $checked_in_players_query = "SELECT * from scores WHERE week IS :week ORDER BY handicap_score";
+  $collected = 0;
+  $checked_in_players_query = "SELECT * from scores WHERE week IS :week ORDER BY handicap_score,incoming_tag";
   $cipq_stmt = $db->prepare($checked_in_players_query);
   $cipq_stmt->bindParam(":week",$week);
   $cipq_ret = $cipq_stmt->execute();
   while ($row = $cipq_ret->fetchArray(SQLITE3_ASSOC) ){
     $paid = $row['paid'];
+    $collected += $paid;
     $ace = $row['ace'];
     $player_pool = $row['pool'];
     if (!empty($paid)){
@@ -61,10 +63,22 @@
 <table border="1">
 <tr><td>Total Collected</td><td>Total A Pool</td><td>Total B Pool</td><td>Total C Pool</td><td>Total W Pool</td><td>Ace Pot</td><td>Course</td><td>Bonanza</td></tr>
 <?php
-  $collected = $player_count * ($amount_to_payout + $amount_to_ace_pot + $amount_to_course + $amount_to_bonanza);
+  // FIXME should probably add a check that the number of players in the pool is > the number of spots to payout
   $pool_payout = array();
+  $pool_place_payout = array();
   foreach (array('A','B','C','W') as $pool){
+    print "<!--DEBUG: calculating pool payouts for each place-->\n";
     $pool_payout[$pool] = $players_per_pool[$pool] * $amount_to_payout;
+    print "<!--DEBUG: $pool pool, total payout {$pool_payout[$pool]}-->\n";
+    $pool_place_payout[$pool] = array();
+    $count = 0;
+    while ($count < $payout_count[$pool]) {
+      $payout_factor = $pool_payout_schedule[$pool][$count];
+      $place_payout_tmp = $pool_place_payout[$pool][$count] = round (($pool_payout[$pool] / $payout_factor),2);
+      $count++;
+      print "<!-- Calculate payout for $count place -->\n";
+      print "<!-- factor = $payout_factor : payout = $place_payout_tmp -->\n";
+    }
   }
   $total_ace_pot = $current_ace_pot + ($player_count * $amount_to_ace_pot);
   if ($total_ace_pot > 250) {
@@ -79,10 +93,18 @@
   $bonanza_money = $player_count * $amount_to_bonanza;
   print "<tr>\n";
   print "<td>$collected</td>\n";
-  print "<td>{$pool_payout['A']}</td>\n";
-  print "<td>{$pool_payout['B']}</td>\n";
-  print "<td>{$pool_payout['C']}</td>\n";
-  print "<td>{$pool_payout['W']}</td>\n";
+  foreach (array('A','B','C','W') as $pool){
+    print "<td>{$pool_payout[$pool]}:";
+    $count = 0;
+    while ($count < $payout_count[$pool]){
+      print "{$pool_place_payout[$pool][$count]}";
+      $count++;
+      if ($count < $payout_count[$pool]) {
+        print ":";
+      }
+    }
+    print "</td>\n";
+  }
   print "<td>$current_ace_pot</td>\n";
   print "<td>$course_money</td>\n";
   print "<td>$bonanza_money</td>\n";
@@ -93,7 +115,7 @@
 <?php
   foreach (array('A','B','C','W') as $pool){
     print "<h4>$pool Pool</h4>\n";
-    $pool_results_query = "SELECT * from scores WHERE week IS :week AND pool IS :pool ORDER BY handicap_score";
+    $pool_results_query = "SELECT * from scores WHERE week IS :week AND pool IS :pool ORDER BY handicap_score,incoming_tag";
     $pool_stmt = $db->prepare($pool_results_query);
     $pool_stmt->bindParam(":week",$week);
     $pool_stmt->bindParam(":pool",$pool);
@@ -106,6 +128,27 @@
         print "<td>Place</td><td>Player</td><td>Course</td><td>Score</td><td>Handicap Score</td><td>Points</td><td>Payout</td>\n";
         print "</tr>\n";
       }
+      $points = $payout_count[$pool] - $row_count;
+      $score = $row['handicap_score'];
+      $tie_query = "SELECT * from scores WHERE week IS :week AND pool IS :pool AND handicap_score IS :handicap_score";
+      $tie_stmt = $db->prepare($tie_query);
+      $tie_stmt->bindParam(":week",$week);
+      $tie_stmt->bindParam(":pool",$pool);
+      $tie_stmt->bindParam(":handicap_score",$score);
+      $tie_ret = $tie_stmt->execute();
+      $tie_count = 0;
+      $payout_sum = 0;
+      while ($tie_row = $tie_ret->fetchArray(SQLITE3_ASSOC)){
+        $index = $row_count + $tie_count;
+        if ($index < $payout_count[$pool]) {
+          $payout_sum += $pool_place_payout[$pool][$index];
+        }
+        $tie_count++;
+      }
+      $payout = round (($payout_sum / $tie_count),2);
+      if ($tie_count > 1){
+        // We have a tie
+      }
       $row_count++;
       print "<tr>\n";
       print "<td>$row_count</td>\n";
@@ -116,14 +159,9 @@
       print "<td>{$row['course']}</td>\n";
       print "<td>{$row['score']}</td>\n";
       print "<td>{$row['handicap_score']}</td>";
-      // FIXME Add points calculation here
-      $points = 5;
       print "<td>$points</td>\n";
-      // FIXME Add payout calucation here
-      $payout = 0;
       print "<td>$payout</td>\n";
       print "</tr>\n";
-      // FIXME update table row with place, points and payout
     }
     if ($row_count > 0){
       print "</table>\n";
