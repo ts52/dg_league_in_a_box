@@ -10,9 +10,13 @@
 	$amount_to_course = $_POST['amount_to_course'];
 	$amount_to_bonanza = $_POST['amount_to_bonanza'];
 	$a_pool_payout_count = $_POST['a_pool_payout_count'];
+	$a_pool_payout_schedule = $_POST['a_pool_payout_schedule'];
 	$b_pool_payout_count = $_POST['b_pool_payout_count'];
+	$b_pool_payout_schedule = $_POST['b_pool_payout_schedule'];
 	$c_pool_payout_count = $_POST['c_pool_payout_count'];
+	$c_pool_payout_schedule = $_POST['c_pool_payout_schedule'];
 	$w_pool_payout_count = $_POST['w_pool_payout_count'];
+	$w_pool_payout_schedule = $_POST['w_pool_payout_schedule'];
 	$a_pool_handicap = $_POST['a_pool_handicap'];
 	$b_pool_handicap = $_POST['b_pool_handicap'];
 	$c_pool_handicap = $_POST['c_pool_handicap'];
@@ -30,14 +34,16 @@
 		// no rows, use insert
 		$insert_sql = <<<EOF
 			INSERT INTO config 
-			    (hill_start_order,general_start_order,
+			    (week,hill_start_order,general_start_order,
            amount_to_payout,amount_to_ace_pot,amount_to_course,amount_to_bonanza,
 			     a_pool_payout_count,b_pool_payout_count,c_pool_payout_count,w_pool_payout_count,
+			     a_pool_payout_schedule,b_pool_payout_schedule,c_pool_payout_schedule,w_pool_payout_schedule,
 			     a_pool_handicap,b_pool_handicap,c_pool_handicap,w_pool_handicap)
 			    VALUES
-			    (:hill_start_order,:general_start_order,
+			    (:week,:hill_start_order,:general_start_order,
            :amount_to_payout,:amount_to_ace_pot,:amount_to_course,:amount_to_bonanza,
 			     :a_pool_payout_count,:b_pool_payout_count,:c_pool_payout_count,:w_pool_payout_count,
+			     :a_pool_payout_schedule,:b_pool_payout_schedule,:c_pool_payout_schedule,:w_pool_payout_schedule,
 			     :a_pool_handicap,:b_pool_handicap,:c_pool_handicap,:w_pool_handicap );
 EOF;
 		$cfg_update_stmt = $db->prepare($insert_sql);
@@ -45,17 +51,20 @@ EOF;
 		// rows exist, use update
 		$update_sql = <<<EOF
 			UPDATE config 
-			    SET hill_start_order=:hill_start_order, 
+			    SET week=:week, hill_start_order=:hill_start_order, 
            general_start_order=:general_start_order, amount_to_payout=:amount_to_payout, 
            amount_to_ace_pot=:amount_to_ace_pot, amount_to_course=:amount_to_course,
            amount_to_bonanza=:amount_to_bonanza,
 			     a_pool_payout_count=:a_pool_payout_count, b_pool_payout_count=:b_pool_payout_count,
 			     c_pool_payout_count=:c_pool_payout_count, w_pool_payout_count=:w_pool_payout_count,
+			     a_pool_payout_schedule=:a_pool_payout_schedule, b_pool_payout_schedule=:b_pool_payout_schedule,
+			     c_pool_payout_schedule=:c_pool_payout_schedule, w_pool_payout_schedule=:w_pool_payout_schedule,
 			     a_pool_handicap=:a_pool_handicap, b_pool_handicap=:b_pool_handicap,
 			     c_pool_handicap=:c_pool_handicap, w_pool_handicap=:w_pool_handicap;
 EOF;
 		$cfg_update_stmt = $db->prepare($update_sql);
 	}
+	$cfg_update_stmt->bindParam(":week", $week);
 	$cfg_update_stmt->bindParam(":hill_start_order", $hill_start_order);
 	$cfg_update_stmt->bindParam(":general_start_order", $general_start_order);
 	$cfg_update_stmt->bindParam(":amount_to_payout", $amount_to_payout);
@@ -66,6 +75,10 @@ EOF;
 	$cfg_update_stmt->bindParam(":b_pool_payout_count", $b_pool_payout_count);
 	$cfg_update_stmt->bindParam(":c_pool_payout_count", $c_pool_payout_count);
 	$cfg_update_stmt->bindParam(":w_pool_payout_count", $w_pool_payout_count);
+	$cfg_update_stmt->bindParam(":a_pool_payout_schedule", $a_pool_payout_schedule);
+	$cfg_update_stmt->bindParam(":b_pool_payout_schedule", $b_pool_payout_schedule);
+	$cfg_update_stmt->bindParam(":c_pool_payout_schedule", $c_pool_payout_schedule);
+	$cfg_update_stmt->bindParam(":w_pool_payout_schedule", $w_pool_payout_schedule);
 	$cfg_update_stmt->bindParam(":a_pool_handicap", $a_pool_handicap);
 	$cfg_update_stmt->bindParam(":b_pool_handicap", $b_pool_handicap);
 	$cfg_update_stmt->bindParam(":c_pool_handicap", $c_pool_handicap);

@@ -74,7 +74,7 @@
     $count = 0;
     while ($count < $payout_count[$pool]) {
       $payout_factor = $pool_payout_schedule[$pool][$count];
-      $place_payout_tmp = $pool_place_payout[$pool][$count] = round (($pool_payout[$pool] / $payout_factor),2);
+      $place_payout_tmp = $pool_place_payout[$pool][$count] = round (($pool_payout[$pool] / $payout_factor),0);
       $count++;
       print "<!-- Calculate payout for $count place -->\n";
       print "<!-- factor = $payout_factor : payout = $place_payout_tmp -->\n";
@@ -121,7 +121,7 @@
     $pool_stmt->bindParam(":pool",$pool);
     $pool_ret = $pool_stmt->execute();
     $row_count = 0;
-    while (($row = $pool_ret->fetchArray(SQLITE3_ASSOC)) and ($row_count < $payout_count[$pool])){
+    while ($row = $pool_ret->fetchArray(SQLITE3_ASSOC)){
       // FIXME - this loop needs to iterate over the entir pool and update the scores database for each player
       // FIXME - but should stop displaying after players that get pait
       if ($row_count == 0){
@@ -148,28 +148,13 @@
         }
         $tie_count++;
       }
-      $payout = round (($payout_sum / $tie_count),2);
-      print "<tr>\n";
-      print "<td>$place</td>\n";
+      $payout = round (($payout_sum / $tie_count),0);
       $firstname = $row['firstname'];
       $lastname = $row['lastname'];
       $playerid = $row['playerid'];
-      print "<td>$firstname $lastname</td>\n";
-      print "<td>{$row['course']}</td>\n";
-      print "<td>{$row['score']}</td>\n";
-      print "<td>{$row['handicap_score']}</td>";
-      print "<td>$points</td>\n";
-      print "<td>$payout</td>\n";
-      print "</tr>\n";
-      $row_count += $tie_count;
-      while ($tie_count > 1){
-        $row = $pool_ret->fetchArray(SQLITE3_ASSOC);
-        $tie_count--;
+      if ($row_count < $payout_count[$pool]){
         print "<tr>\n";
         print "<td>$place</td>\n";
-        $firstname = $row['firstname'];
-        $lastname = $row['lastname'];
-        $playerid = $row['playerid'];
         print "<td>$firstname $lastname</td>\n";
         print "<td>{$row['course']}</td>\n";
         print "<td>{$row['score']}</td>\n";
@@ -177,7 +162,50 @@
         print "<td>$points</td>\n";
         print "<td>$payout</td>\n";
         print "</tr>\n";
+      } else {
+        $points = $payout = 0;
       }
+      $update_payouts_query = <<<EOF
+UPDATE scores
+  SET payout=:payout, points=:points, place_in_pool=:place_in_pool
+  WHERE week IS :week AND playerid IS :playerid;
+EOF;
+      $update_payouts_stmt = $db->prepare($update_payouts_query);
+      $update_payouts_stmt->bindParam(":week",$week);
+      $update_payouts_stmt->bindParam(":playerid",$playerid);
+      $update_payouts_stmt->bindParam(":payout",$payout);
+      $update_payouts_stmt->bindParam(":points",$points);
+      $update_payouts_stmt->bindParam(":place_in_pool",$place_in_pool);
+      $update_payouts_stmt->execute();
+      $new_row_count = $row_count + $tie_count;
+      while ($tie_count > 1){
+        $row = $pool_ret->fetchArray(SQLITE3_ASSOC);
+        $tie_count--;
+        $firstname = $row['firstname'];
+        $lastname = $row['lastname'];
+        $playerid = $row['playerid'];
+        if ($row_count < $payout_count[$pool]){
+          print "<tr>\n";
+          print "<td>$place</td>\n";
+          print "<td>$firstname $lastname</td>\n";
+          print "<td>{$row['course']}</td>\n";
+          print "<td>{$row['score']}</td>\n";
+          print "<td>{$row['handicap_score']}</td>";
+          print "<td>$points</td>\n";
+          print "<td>$payout</td>\n";
+          print "</tr>\n";
+        } else {
+          $points = $payout = 0;
+        }
+        $tie_update_payouts_stmt = $db->prepare($update_payouts_query);
+        $tie_update_payouts_stmt->bindParam(":week",$week);
+        $tie_update_payouts_stmt->bindParam(":playerid",$playerid);
+        $tie_update_payouts_stmt->bindParam(":payout",$payout);
+        $tie_update_payouts_stmt->bindParam(":points",$points);
+        $tie_update_payouts_stmt->bindParam(":place_in_pool",$place_in_pool);
+        $tie_update_payouts_stmt->execute();
+      }
+      $row_count = $new_row_count;
     }
     if ($row_count > 0){
       print "</table>\n";
@@ -200,7 +228,7 @@
       print "</tr>\n";
     }
       $place = $row_count + 1;
-      $player = "{$row['firstname']} {$row['lastame']}";
+      $player = "{$row['firstname']} {$row['lastname']}";
       $pool = $row['pool'];
       $incoming_tag = $row['incoming_tag'];
       $course = $row['course'];
