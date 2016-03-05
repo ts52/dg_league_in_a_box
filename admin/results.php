@@ -122,6 +122,8 @@
     $pool_ret = $pool_stmt->execute();
     $row_count = 0;
     while (($row = $pool_ret->fetchArray(SQLITE3_ASSOC)) and ($row_count < $payout_count[$pool])){
+      // FIXME - this loop needs to iterate over the entir pool and update the scores database for each player
+      // FIXME - but should stop displaying after players that get pait
       if ($row_count == 0){
         print "<table border='1'>\n";
         print "<tr>\n";
@@ -129,6 +131,7 @@
         print "</tr>\n";
       }
       $points = $payout_count[$pool] - $row_count;
+      $place = $row_count + 1;
       $score = $row['handicap_score'];
       $tie_query = "SELECT * from scores WHERE week IS :week AND pool IS :pool AND handicap_score IS :handicap_score";
       $tie_stmt = $db->prepare($tie_query);
@@ -146,12 +149,8 @@
         $tie_count++;
       }
       $payout = round (($payout_sum / $tie_count),2);
-      if ($tie_count > 1){
-        // We have a tie
-      }
-      $row_count++;
       print "<tr>\n";
-      print "<td>$row_count</td>\n";
+      print "<td>$place</td>\n";
       $firstname = $row['firstname'];
       $lastname = $row['lastname'];
       $playerid = $row['playerid'];
@@ -162,10 +161,68 @@
       print "<td>$points</td>\n";
       print "<td>$payout</td>\n";
       print "</tr>\n";
+      $row_count += $tie_count;
+      while ($tie_count > 1){
+        $row = $pool_ret->fetchArray(SQLITE3_ASSOC);
+        $tie_count--;
+        print "<tr>\n";
+        print "<td>$place</td>\n";
+        $firstname = $row['firstname'];
+        $lastname = $row['lastname'];
+        $playerid = $row['playerid'];
+        print "<td>$firstname $lastname</td>\n";
+        print "<td>{$row['course']}</td>\n";
+        print "<td>{$row['score']}</td>\n";
+        print "<td>{$row['handicap_score']}</td>";
+        print "<td>$points</td>\n";
+        print "<td>$payout</td>\n";
+        print "</tr>\n";
+      }
     }
     if ($row_count > 0){
       print "</table>\n";
     }
+  }
+?>
+
+<h3>All Players</h3>
+<?php
+  $row_count = 0;
+  $checked_in_players_query = "SELECT * from scores WHERE week IS :week ORDER BY handicap_score,incoming_tag";
+  $cipq_stmt = $db->prepare($checked_in_players_query);
+  $cipq_stmt->bindParam(":week",$week);
+  $cipq_ret = $cipq_stmt->execute();
+  while ($row = $cipq_ret->fetchArray(SQLITE3_ASSOC) ){
+    if ($row_count == 0){
+      print "<table border='1'>\n";
+      print "<tr>\n";
+      print "<td>Place</td><td>Player</td><td>Pool</td><td>Incoming Tag</td><td>Course</td><td>Score</td><td>Handicap Score</td><td>Points</td><td>Payout</td>\n";
+      print "</tr>\n";
+    }
+      $place = $row_count + 1;
+      $player = "{$row['firstname']} {$row['lastame']}";
+      $pool = $row['pool'];
+      $incoming_tag = $row['incoming_tag'];
+      $course = $row['course'];
+      $score = $row['score'];
+      $handicap_score = $row['handicap_score'];
+      $points = $row['points'];
+      $payout = $row['payout'];
+      print "<tr>";
+      print "<td>$place</td>";
+      print "<td>$player</td>";
+      print "<td>$pool</td>";
+      print "<td>$incoming_tag</td>";
+      print "<td>$course</td>";
+      print "<td>$score</td>";
+      print "<td>$handicap_score</td>";
+      print "<td>$points</td>";
+      print "<td>$payout</td>";
+      print "</tr>\n";
+      $row_count++;
+  }
+  if ($row_count > 0){
+    print "</table>\n";
   }
 ?>
 

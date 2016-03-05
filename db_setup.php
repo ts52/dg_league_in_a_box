@@ -8,14 +8,20 @@
 		playerid INTEGER PRIMARY KEY ASC AUTOINCREMENT,
 		lastname STRING,
 		firstname STRING,
-		pool STRING )
+		pool STRING );
 EOD;
 	$db->exec($user_table_create) or die('Create user db failed');
+
+  $current_state_table_create = <<<EOD
+CREATE TABLE IF NOT EXISTS current_state (
+  week INTEGER,
+  system_state STRING );
+EOD;
+  $db->exec($current_state_table_create) or die('Create current_state db failed');
 
 	$config_table_create = <<<EOD
 	    CREATE TABLE IF NOT EXISTS config (
 		week INTEGER,
-		system_state STRING,
 		hill_start_order STRING,
     hill_max_players INTEGER,
 		general_start_order STRING,
@@ -37,7 +43,7 @@ EOD;
 		a_pool_handicap DOUBLE,
 		b_pool_handicap DOUBLE,
 		c_pool_handicap DOUBLE,
-		w_pool_handicap DOUBLE )
+		w_pool_handicap DOUBLE );
 EOD;
 	$db->exec($config_table_create) or die('Create config db failed');
 	

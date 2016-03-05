@@ -33,12 +33,12 @@
     $start_hole = $row['start_hole'];
   }
 
-  print ("DEBUG: found $player_count players checked in with ID:$playerid<br>");
+  print ("<!--DEBUG: found $player_count players checked in with ID:$playerid-->\n");
 
   if ($player_count != 0) {
     print "$firstname $lastname is already checked in to the $course on hole $start_hole<br>";
   } else {
-    print "Checking $firstname $lastname in to the $course for week $week<br>";
+    print "<!--Checking $firstname $lastname in to the $course for week $week-->\n";
 
     $checked_in_player_query = "SELECT * from scores WHERE week IS :week AND course IS :course";
     $cipq_stmt = $db->prepare($checked_in_player_query);
@@ -50,7 +50,7 @@
       $player_count++;
     }
 
-    print "There are already $player_count players checked in to the $course<br>";
+    print "<!--There are already $player_count players checked in to the $course-->\n";
 
     if ($course == 'hill'){
       $start_hole = $hill_start_array[$player_count];
@@ -75,7 +75,8 @@ EOF;
     $add_player_stmt->bindParam(":incoming_tag", $incoming_tag);
     $add_player_stmt->bindParam(":start_hole", $start_hole);
     $add_player_stmt->execute();
-    print ("Player $firstname $lastname checked in to the $course<br>");
-    print ("Your start hole is $start_hole.<br>");
+    print ("<h2>Player $firstname $lastname checked in to the $course</h2>\n");
+    print ("<h2>Your start hole is $start_hole.</h2>\n");
   }
 ?>
+<h3><a href="index.php">Back to check in</a></h3>

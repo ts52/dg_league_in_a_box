@@ -33,7 +33,7 @@
 		print "No matching players found<br>";
 	}
 	print "<h3>Add a new player?</h3>";
-	print "<form action='admin/add_player.php' method='post'>";
+	print "<form action='./add_player.php' method='post'>";
 	print "First Name: <input type='text' name='firstname'><br>";
 	print "Last Name: <input type='text' name='lastname' value=$lastname><br>";
 	print "Pool: <select name = 'pool'><option value='A'>A</option><option value='B'>B</option><option value='C'>C</option><option value='W'>W</option></select><br>";
