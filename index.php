@@ -19,8 +19,6 @@
     print ("<h3>Score Entry</h3>");
     print "Current week is $week<br>";
     print "<form action='score_entry_search.php' method='post'>";
-    print "<input type='radio' name='course' value='hill'>The Hill</input>  ";
-    print "<input type='radio' name='course' value='general'>The General</input><br>";
     print "Last Name: <input type='text' name='lastname'><br>";
     //print "Starting Hole: <input type='text' name='start_hole'><br>";
     print ('<input type="submit" value="Submit">');

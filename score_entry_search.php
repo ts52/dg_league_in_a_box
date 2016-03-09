@@ -16,11 +16,10 @@
 	include './db_setup.php';
   include './get_config.php';
 	$lastname = $_POST['lastname'];
-  $course = $_POST['course'];
   $playerid = $_POST['playerid'];
 
   print "<!--DEBUG: in score_entry_search.php-->\n";
-	$player_query = "SELECT * from scores WHERE week IS :week AND course IS :course AND";
+	$player_query = "SELECT * from scores WHERE week IS :week AND";
   if (!empty($playerid)) {
     $player_query = "$player_query playerid IS :playerid;";
   } else {
@@ -36,13 +35,12 @@
   }
   print "<!--DEBUG: binding :week to $week-->\n";
 	$pq_stmt->bindParam(":week",$week);
-  print "<!--DEBUG: binding :course to $course-->\n";
-	$pq_stmt->bindParam(":course",$course);
 	$pq_ret = $pq_stmt->execute();
 	$row_count = 0;
 	while ($row = $pq_ret->fetchArray(SQLITE3_ASSOC) ){
     if (empty($row['score'])){
       $row_count++;
+      $course = $row['course'];
       $start_hole = $row['start_hole'];
     }
 	}
@@ -58,7 +56,7 @@
         // print table header
         print "<h3>Matching Players</h3>\n";
         print "<table border='1'>\n";
-        print "<tr><td></td><td>Player Name</td><td>Pool</td><td>Start Hole</td></tr>\n";
+        print "<tr><td></td><td>Player Name</td><td>Pool</td><td>Course</td><td>Start Hole</td></tr>\n";
       }
       if (empty($row['score'])){
         $row_count++;
@@ -66,17 +64,18 @@
         $lastname = $row['lastname'];
         $firstname = $row['firstname'];
         $pool = $row['pool'];
+        $course = $row['course'];
         $start_hole = $row['start_hole'];
         print "<tr>\n";
         print "<td><input type='radio' name='playerid' value=$playerid></td>\n";
         print "<td>$firstname $lastname</td>\n";
         print "<td>$pool</td>\n";
+        print "<td>$course</td>\n";
         print "<td>$start_hole</td>\n";
         print "</tr>\n";
       }
     }
     print "</table>\n";
-    print "<input type='hidden' name='course' value=$course>\n";
     print "<input type='hidden' name='lastname' value=$lastname>\n";
     print "<input type='submit' value='Select Player'>\n";
     print "</form>\n";
