@@ -8,29 +8,40 @@
 	$pq_stmt = $db->prepare($player_query);
 	$pq_stmt->bindParam(":lastname",$lastname);
 	$pq_ret = $pq_stmt->execute();
-	$row_count = 0;
+	$matching_player_count = 0;
 	while ($row = $pq_ret->fetchArray(SQLITE3_ASSOC) ){
-		if ($row_count == 0){
-			// print table header
-			print "<h3>Matching Players</h3>";
-		}
-		$row_count++;
-		$playerid = $row['playerid'];
-		$lastname = $row['lastname'];
-		$firstname = $row['firstname'];
-		$pool = $row['pool'];
-    print "<form action='check_in_player.php' method='post'>";
-		print "<input type='radio' name='playerid' value=$playerid>$firstname $lastname ID#:$playerid Pool:$pool</input><br>";
-	}
-	if ($row_count != 0) {
-		// close table
-    print "Incoming Tag #: <input type='text' name='incoming_tag'><br>";
-    print "<input type='hidden' name='course' value=$course>";
-    print "<input type='submit' value='Check In'>";
-    print "</form>";
-		print "<hr>";
-	} else {
+    $matching_player_count++;
+  }
+  if ($matching_player_count == 0){
 		print "No matching players found<br>";
+  } else {
+    $row_count = 0;
+    $pq_ret->reset();
+    while ($row = $pq_ret->fetchArray(SQLITE3_ASSOC) ){
+      if ($row_count == 0){
+        // print table header
+        print "<h3>Matching Players</h3>";
+      }
+      $row_count++;
+      $playerid = $row['playerid'];
+      $lastname = $row['lastname'];
+      $firstname = $row['firstname'];
+      $pool = $row['pool'];
+      print "<form action='check_in_player.php' method='post'>";
+      $selected = "";
+      if ($matching_player_count == 1) {
+        $selected = "checked";
+      }
+      print "<input type='radio' name='playerid' $selected value=$playerid>$firstname $lastname ID#:$playerid Pool:$pool</input><br>";
+    }
+    if ($row_count != 0) {
+      // close table
+      print "Incoming Tag #: <input type='text' name='incoming_tag'><br>";
+      print "<input type='hidden' name='course' value=$course>";
+      print "<input type='submit' value='Check In'>";
+      print "</form>";
+      print "<hr>";
+    }
 	}
 	print "<h3>Add a new player?</h3>";
 	print "<form action='./add_player.php' method='post'>";
