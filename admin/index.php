@@ -46,7 +46,7 @@
 <?php
   if ($system_state == 'score_entry') {
     $player_count = 0;
-    $checked_in_players_query = "SELECT * from scores WHERE week IS :week AND score IN ( NULL, '' ) ORDER BY course,start_hole,incoming_tag";
+    $checked_in_players_query = "SELECT * from scores WHERE week IS :week AND ( score IS NULL OR score IS '' ) ORDER BY course,start_hole,incoming_tag";
     $cipq_stmt = $db->prepare($checked_in_players_query);
     $cipq_stmt->bindParam(":week",$week);
     $cipq_ret = $cipq_stmt->execute();
