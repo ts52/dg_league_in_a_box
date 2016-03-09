@@ -162,7 +162,6 @@
 
 <h3><a href="config_update.php">Edit configuration</a></h3>
 
-<h3>Players that need to pay</h3>
 <?php
   $player_count = 0;
   $checked_in_players_query = "SELECT * from scores WHERE week IS :week AND paid IS NULL ORDER BY course,start_hole,incoming_tag";
@@ -171,10 +170,13 @@
   $cipq_ret = $cipq_stmt->execute();
   while ($row = $cipq_ret->fetchArray(SQLITE3_ASSOC) ){
     if ($player_count == 0){
+      print "<h3>Players that need to pay</h3>\n";
+      print ("<form action='update_paid.php' method='post'>");
       print ("<table border='1'>");
-      print ("<tr><td>Player</td><td>Pool</td><td>Course</td><td>Starting Hole</td><td>Tag#</td><td>Paid</td><td>Score</td><td>Handicap Score</td><td>Ace Hole</td><td>Points</td><td>Payout</td><td>Place (in pool)</td><td></td></tr>");
+      print ("<tr><td>Player</td><td>Pool</td><td>Course</td><td>Starting Hole</td><td>Tag#</td><td>Paid</td></tr>");
     }
-    $player_count++;
+    $playerid_field = "playerid$player_count";
+    $paid_field = "paid$player_count";
     $playerid = $row['playerid'];
     $firstname = $row['firstname'];
     $lastname = $row['lastname'];
@@ -183,97 +185,26 @@
     $incoming_tag = $row['incoming_tag'];
     $start_hole = $row['start_hole'];
     $paid = $row['paid'];
-    $score = $row['score'];
-    $handicap_score = $row['handicap_score'];
-    $ace = $row['ace'];
-    $points = $row['points'];
-    $payout = $row['payout'];
-    $place_in_pool = $row['place_in_pool'];
-    print ("<form action='update_checked_in_player.php' method='post'>");
-    print ("<input type='text' name='playerid' value=$playerid hidden>");
+    print ("<input type='hidden' name=\"$playerid_field\" value=\"$playerid\" >");
     print ("<tr><td>$firstname $lastname</td>");
-    print ("<td>");
-    print ("<select type='text' name='pool'>");
-    print ("<option value='A'");
-    if ( $pool == "A" ) {
-      print (" selected");
-    }
-    print (">A</option>");
-    print ("<option value='B'");
-    if ( $pool == "B" ) {
-      print (" selected");
-    }
-    print (">B</option>");
-    print ("<option value='C'");
-    if ( $pool == "C" ) {
-      print (" selected");
-    }
-    print (">C</option>");
-    print ("<option value='W'");
-    if ( $pool == "W" ) {
-      print (" selected");
-    }
-    print (">W</option>");
-    print ("</td>");
+    print ("<td>$pool</td>\n");
+    print ("<td>$course</td>\n");
+    print ("<td>$start_hole</td>\n");
+    print ("<td>$incoming_tag</td>\n");
 
     print ("<td>");
-    print ("<select type='text' name='course'>");
-    print ("<option value='hill'");
-    if ( $course == "hill" ) {
-      print (" selected");
-    }
-    print (">hill</option>");
-    print ("<option value='general'");
-    if ( $course == "general" ) {
-      print (" selected");
-    }
-    print (">general</option>");
+    print ("<input type='text' name=\"$paid_field\" value=\"$paid\" size='2' >");
     print ("</td>");
-
-    print ("<td>");
-    print ("<input type='text' name='start_hole' value=\"$start_hole\" size='3'>");
-    print ("</td>");
-
-    print ("<td>");
-    print ("<input type='text' name='incoming_tag' value=\"$incoming_tag\" size='4'>");
-    print ("</td>");
-
-    print ("<td>");
-    print ("<input type='text' name='paid' value=\"$paid\" size='2' >");
-    print ("</td>");
-
-    print ("<td>");
-    print ("<input type='text' name='score' value=\"$score\" size='4' >");
-    print ("</td>");
-
-    print ("<td>");
-    print ("<input type='text' name='handicap_score' value=\"$handicap_score\" size='4'>");
-    print ("</td>");
-
-    print ("<td>");
-    print ("<input type='text' name='ace' value=\"$ace\" size='3'>");
-    print ("</td>");
-
-    print ("<td>");
-    print ("<input type='text' name='points' value=\"$points\" size='2' >");
-    print ("</td>");
-
-    print ("<td>");
-    print ("<input type='text' name='payout' value=\"$payout\" size='8' >");
-    print ("</td>");
-
-    print ("<td>");
-    print ("<input type='text' name='place_in_pool' value=\"$place_in_pool\" size='4' >");
-    print ("</td>");
-
-    print ("<td><input type='submit' value='Update'</td>");
     print ("</tr>");
-    print ("</form>");
+    $player_count++;
   }
   if ($player_count == 0){
     print ("All checked in players have paid<br>");
   } else {
     print ("</table>");
+    print ("<input type='hidden' name='player_count' value=$player_count>\n");
+    print ("<input type='submit' value='Update'>\n");
+    print ("</form>");
   }
 ?>
 

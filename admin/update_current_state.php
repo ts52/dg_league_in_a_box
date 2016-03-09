@@ -4,12 +4,15 @@
 	$week = $_POST['week'];
 	$system_state = $_POST['system_state'];
 
+  print "<!--DEBUG: updating week to $week and state to $system_state-->\n";
+
 	$config_query = "SELECT * from current_state ;";
 	$cq_ret = $db->query($config_query);
 	$row_count = 0;
 	while ($row = $cq_ret->fetchArray(SQLITE3_ASSOC) ){
 		$row_count++;
 	}
+  print "<!--DEBUG: current_state row count is $row_count-->\n";
 	if ($row_count == 0) {
 		// no rows, use insert
 		$insert_sql = <<<EOF
@@ -29,7 +32,12 @@ EOF;
 	}
 	$cfg_update_stmt->bindParam(":week", $week);
 	$cfg_update_stmt->bindParam(":system_state", $system_state);
-	$cfg_update_stmt->execute();
-	print "Current State updated<br>\n";
+	$update_ret = $cfg_update_stmt->execute();
+  if ($update_ret){
+    print "Current State updated<br>\n";
+  } else {
+    print "ERROR: Update failed.<br>\nSQLITE Error:<br>\n";
+    print "{$db->lastErrorMsg()}<br>\n";
+  }
 ?>
 <h3><a href="index.php">Back to Admin</a></h3>

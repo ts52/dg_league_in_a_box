@@ -59,10 +59,12 @@
   print "</tr>\n";
 ?>
 </table>
+
 <h3>Money</h3>
 <table border="1">
 <tr><td>Total Collected</td><td>Total A Pool</td><td>Total B Pool</td><td>Total C Pool</td><td>Total W Pool</td><td>Ace Pot</td><td>Course</td><td>Bonanza</td></tr>
 <?php
+  // FIXME Need to add a Money section to admin/index.php
   // FIXME should probably add a check that the number of players in the pool is > the number of spots to payout
   $pool_payout = array();
   $pool_place_payout = array();
@@ -111,6 +113,7 @@
   print "</tr>\n";
 ?>
 </table>
+
 <h3>Top N per Pool</h3>
 <?php
   foreach (array('A','B','C','W') as $pool){
@@ -127,7 +130,7 @@
       if ($row_count == 0){
         print "<table border='1'>\n";
         print "<tr>\n";
-        print "<td>Place</td><td>Player</td><td>Course</td><td>Score</td><td>Handicap Score</td><td>Points</td><td>Payout</td>\n";
+        print "<td>Place</td><td>Player</td><td>Course</td><td>Score</td><td>Adjusted Score</td><td>Points</td><td>Payout</td>\n";
         print "</tr>\n";
       }
       $points = $payout_count[$pool] - $row_count;
@@ -224,7 +227,7 @@ EOF;
     if ($row_count == 0){
       print "<table border='1'>\n";
       print "<tr>\n";
-      print "<td>Place</td><td>Player</td><td>Pool</td><td>Incoming Tag</td><td>Course</td><td>Score</td><td>Handicap Score</td><td>Points</td><td>Payout</td>\n";
+      print "<td>Place</td><td>Player</td><td>Pool</td><td>Incoming Tag</td><td>Course</td><td>Score</td><td>Adjusted Score</td>\n";
       print "</tr>\n";
     }
       $place = $row_count + 1;
@@ -234,8 +237,6 @@ EOF;
       $course = $row['course'];
       $score = $row['score'];
       $handicap_score = $row['handicap_score'];
-      $points = $row['points'];
-      $payout = $row['payout'];
       print "<tr>";
       print "<td>$place</td>";
       print "<td>$player</td>";
@@ -244,8 +245,6 @@ EOF;
       print "<td>$course</td>";
       print "<td>$score</td>";
       print "<td>$handicap_score</td>";
-      print "<td>$points</td>";
-      print "<td>$payout</td>";
       print "</tr>\n";
       $row_count++;
   }
