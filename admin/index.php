@@ -153,10 +153,12 @@
       print ("</form>");
     }
     if ($player_count == 0){
-      print "<h3><a href=results.php>Generate Results</a></h3>\n";
+      print "<h3><a href=generate_results.php>Generate Results</a></h3>\n";
     } else {
       print ("</table>");
     }
+  } else if ($system_state == 'closed'){
+      print "<h3><a href=show_results.php>Results</a></h3>\n";
   }
 ?>
 
