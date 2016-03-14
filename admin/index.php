@@ -211,14 +211,82 @@
 ?>
 
 <?php
-  print ("<h3>Checked in Players for week $week</h3>");
   $player_count = 0;
+  $paid_player_count = 0;
+	$collected = 0;
   $pool_count['A'] = $pool_count['B'] = $pool_count['C'] = $pool_count['W'] = 0;
+  $pool_payout['A'] = $pool_payout['B'] = $pool_payout['C'] = $pool_payout['W'] = 0;
   $course_count['hill'] = $course_count['general'] = 0;
   $checked_in_players_query = "SELECT * from scores WHERE week IS :week ORDER BY course,start_hole,incoming_tag";
   $cipq_stmt = $db->prepare($checked_in_players_query);
   $cipq_stmt->bindParam(":week",$week);
   $cipq_ret = $cipq_stmt->execute();
+  while ($row = $cipq_ret->fetchArray(SQLITE3_ASSOC) ){
+		$player_count++;
+    $pool = $row['pool'];
+    $pool_count[$pool]++;
+    $course = $row['course'];
+    $course_count[$course]++;
+		$paid = $row['paid'];
+		if ( ! empty($paid) ){
+			$collected += $paid;
+			$pool_payout[$pool] += $amount_to_payout;
+			$paid_player_count++;
+		}
+	}
+?>
+
+<h3>Check in Counts</h3>
+<table border="1">
+<tr>
+<td>Total</td><td>A Pool</td><td>B Pool</td><td>C Pool</td><td>W Pool</td><td>Hill</td><td>General</td>
+</tr>
+<?php
+  print "<tr>\n";
+  print "<td>$player_count</td>";
+  print "<td>{$pool_count['A']}</td>";
+  print "<td>{$pool_count['B']}</td>";
+  print "<td>{$pool_count['C']}</td>";
+  print "<td>{$pool_count['W']}</td>";
+  print "<td>{$course_count['hill']}</td>";
+  print "<td>{$course_count['general']}</td>";
+  print "</tr>\n";
+?>
+</table>
+
+<h3>Money</h3>
+<table border="1">
+<tr><td>Total Collected</td><td>Total A Pool</td><td>Total B Pool</td><td>Total C Pool</td><td>Total W Pool</td><td>Ace Pot</td><td>Course</td><td>Bonanza</td></tr>
+<?php
+  // FIXME should probably add a check that the number of players in the pool is > the number of spots to payout
+  $total_ace_pot = $current_ace_pot + ($paid_player_count * $amount_to_ace_pot);
+  if ($total_ace_pot > 250) {
+    $current_ace_pot = 250;
+  } else {
+    $current_ace_pot = $total_ace_pot;
+  }
+  if ($ace_count > 0) {
+    $total_ace_pot = $total_ace_pot = $current_ace_pot;
+  }
+  $course_money = $paid_player_count * $amount_to_course;
+  $bonanza_money = $paid_player_count * $amount_to_bonanza;
+  print "<tr>\n";
+  print "<td>$collected</td>\n";
+  foreach (array('A','B','C','W') as $pool){
+    print "<td>{$pool_payout[$pool]}";
+    print "</td>\n";
+  }
+  print "<td>$current_ace_pot</td>\n";
+  print "<td>$course_money</td>\n";
+  print "<td>$bonanza_money</td>\n";
+  print "</tr>\n";
+?>
+</table>
+
+<?php
+  print ("<h3>Checked in Players for week $week</h3>");
+	$cipq_ret->reset();
+	$player_count = 0;
   while ($row = $cipq_ret->fetchArray(SQLITE3_ASSOC) ){
     if ($player_count == 0){
       print ("<table border='1'>");
@@ -229,9 +297,7 @@
     $firstname = $row['firstname'];
     $lastname = $row['lastname'];
     $pool = $row['pool'];
-    $pool_count[$pool]++;
     $course = $row['course'];
-    $course_count[$course]++;
     $incoming_tag = $row['incoming_tag'];
     $start_hole = $row['start_hole'];
     $paid = $row['paid'];
@@ -328,24 +394,6 @@
     print ("</table>");
   }
 ?>
-
-<h3>Check in Counts</h3>
-<table border="1">
-<tr>
-<td>Total</td><td>A Pool</td><td>B Pool</td><td>C Pool</td><td>W Pool</td><td>Hill</td><td>General</td>
-</tr>
-<?php
-  print "<tr>\n";
-  print "<td>$player_count</td>";
-  print "<td>{$pool_count['A']}</td>";
-  print "<td>{$pool_count['B']}</td>";
-  print "<td>{$pool_count['C']}</td>";
-  print "<td>{$pool_count['W']}</td>";
-  print "<td>{$course_count['hill']}</td>";
-  print "<td>{$course_count['general']}</td>";
-  print "</tr>\n";
-?>
-</table>
 
 <h3><a href="registered_players.php">Registered Players</a></h3>
 

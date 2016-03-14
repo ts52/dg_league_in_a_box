@@ -10,7 +10,11 @@
 		firstname STRING,
 		pool STRING );
 EOD;
-	$db->exec($user_table_create) or die('Create user db failed');
+	$ret = $db->exec($user_table_create);
+	if ( ! $ret ) {
+		print "ERROR: <br>\n{$db->lastErrorMsg()}<br>\n";
+		die('Create user db failed');
+	}
 
   $current_state_table_create = <<<EOD
 CREATE TABLE IF NOT EXISTS current_state (

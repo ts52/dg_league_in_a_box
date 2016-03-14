@@ -59,7 +59,7 @@
     }
 
     $insert_sql = <<<EOF
-      INSERT INTO scores 
+      INSERT INTO scores
           (playerid,lastname,firstname,pool,week,course,incoming_tag,start_hole)
           VALUES
           (:playerid,:lastname,:firstname,:pool,:week,:course,:incoming_tag,:start_hole);
@@ -75,8 +75,27 @@ EOF;
     $add_player_stmt->bindParam(":incoming_tag", $incoming_tag);
     $add_player_stmt->bindParam(":start_hole", $start_hole);
     $add_player_stmt->execute();
-    print ("<h2>Player $firstname $lastname checked in to the $course</h2>\n");
+
+		print "<!-- Checking how many players already on hole $start_hole on the $course -->\n";
+		$hole_query = "SELECT * from scores WHERE week IS :week AND course IS :course AND start_hole IS :start_hole";
+		$hq_stmt = $db->prepare($hole_query);
+		$hq_stmt->bindParam(":week", $week);
+		$hq_stmt->bindParam(":course", $course);
+		$hq_stmt->bindParam(":start_hole", $start_hole);
+		$hq_ret = $hq_stmt->execute();
+		$player_count = 0;
+		while($row = $hq_ret->fetchArray(SQLITE3_ASSOC) ){
+			$player_count++;
+		}
+		print "<!-- $player_count players are on this hole. -->\n";
+
+    print ("Player $firstname $lastname checked in to the $course<br>\n");
     print ("<h2>Your start hole is $start_hole.</h2>\n");
+		if ($player_count == 1) {
+			print ("Please put your tag on the board, pay and get a scorecard.<br>\n");
+		} else {
+			print ("Please put your tag on the board and pay.<br>\n");
+		}
   }
 ?>
 <h3><a href="index.php">Back to check in</a></h3>
