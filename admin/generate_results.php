@@ -178,7 +178,7 @@ EOF;
       $update_payouts_stmt->bindParam(":playerid",$playerid);
       $update_payouts_stmt->bindParam(":payout",$payout);
       $update_payouts_stmt->bindParam(":points",$points);
-      $update_payouts_stmt->bindParam(":place_in_pool",$place_in_pool);
+      $update_payouts_stmt->bindParam(":place_in_pool",$place);
       $update_payouts_stmt->execute();
       $new_row_count = $row_count + $tie_count;
       while ($tie_count > 1){
@@ -205,7 +205,7 @@ EOF;
         $tie_update_payouts_stmt->bindParam(":playerid",$playerid);
         $tie_update_payouts_stmt->bindParam(":payout",$payout);
         $tie_update_payouts_stmt->bindParam(":points",$points);
-        $tie_update_payouts_stmt->bindParam(":place_in_pool",$place_in_pool);
+        $tie_update_payouts_stmt->bindParam(":place_in_pool",$place);
         $tie_update_payouts_stmt->execute();
       }
       $row_count = $new_row_count;
