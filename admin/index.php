@@ -397,6 +397,7 @@
 
 <h3><a href="registered_players.php">Registered Players</a></h3>
 
+<?php print "<h3><a href=\"$db_file\">Download DB Backup</a></h3>\n"; ?>
 <h3><a href="shutdown.php">Shutdown the system</a></h3>
 </body>
 </html>
