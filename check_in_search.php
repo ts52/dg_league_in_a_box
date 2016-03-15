@@ -36,7 +36,7 @@
     }
     if ($row_count != 0) {
       // close table
-      print "Incoming Tag #: <input type='text' name='incoming_tag'><br>";
+      print "Incoming Tag #: <input type='text' name='incoming_tag'> Leave blank for no tag<br>";
       print "<input type='hidden' name='course' value=$course>";
       print "<input type='submit' value='Check In'>";
       print "</form>";
