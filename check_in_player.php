@@ -7,7 +7,9 @@
   $course = $_POST['course'];
   $incoming_tag = $_POST['incoming_tag'];
 
+  $pay_amount = '$5';
   if (empty($incoming_tag)){
+    $pay_amount = '$7';
     $incoming_tag = 9999;
   }
 
@@ -92,9 +94,9 @@ EOF;
     print ("Player $firstname $lastname checked in to the $course<br>\n");
     if ($course == "hill") print ("<h2>Your start hole is $start_hole.</h2>\n");
 		if ($player_count == 1 and $course == "hill") {
-			print ("<h3>Please put your tag on the board, pay and get a scorecard.</h3>\n");
+			print ("<h3>Please put your tag on the board, pay $pay_amount and get a scorecard.</h3>\n");
 		} else {
-			print ("Please put your tag on the board and pay.<br>\n");
+			print ("Please put your tag on the board and pay $pay_amount.<br>\n");
 		}
     if ($course == "general"){
       print "<br><a href='form_general_card.php'>Find other players waiting for a card on the General</a>\n";
