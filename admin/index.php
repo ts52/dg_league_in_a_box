@@ -283,6 +283,8 @@
 ?>
 </table>
 
+<h3><a href="../form_general_card.php">General Waiting List</a></h3>
+
 <?php
   print ("<h3>Checked in Players for week $week</h3>");
 	$cipq_ret->reset();

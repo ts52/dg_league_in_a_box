@@ -14,7 +14,7 @@
 
   $hill_start_order = "1,2,3,5,6,11,13,14,18,17,1,2,3,5,6,11,13,14,18,17,1,2,3,5,6,11,13,14,18,17,1,2,3,5,6,11,13,14,18,17,10,10,10,10,12,12,12,12,15,15,15,15,16,16,16,16,4,4,4,4,9,9,9,9,8,8,8,8,7,7,7,7";
   $hill_max_players = 72;
-  $general_start_order = "1.1,1.1,1.1,1.1,14.1,14.1,14.1,14.1,12.1,12.1,12.1,12.1,9.1,9.1,9.1,9.1,1.2,1.2,1.2,1.2,12.2,12.2,12.2,12.2,9.2,9.2,9.2,9.2,1.3,1.3,1.3,1.3,9.3,9.3,9.3,9.3";
+  $general_start_order = "1.14.1,12.1,9.1,1.2,12.2,9.2,1.3,9.3";
   $general_max_players = 36;
 	$amount_to_payout = 2.25;
 	$amount_to_ace_pot = 0.75;
@@ -39,26 +39,26 @@
 	$row_count = 0;
 	while ($row = $cq_ret->fetchArray(SQLITE3_ASSOC) ){
 		$row_count++;
-    $hill_start_order = $row['hill_start_order'];
-    $general_start_order = $row['general_start_order'];
-		$amount_to_payout = $row['amount_to_payout'];
-		$amount_to_ace_pot = $row['amount_to_ace_pot'];
-		$amount_to_course = $row['amount_to_course'];
-		$amount_to_bonanza = $row['amount_to_bonanza'];
-    $current_ace_pot = $row['current_ace_pot'];
-    $max_ace_pot = $row['max_ace_pot'];
-		$a_pool_payout_count = $row['a_pool_payout_count'];
-		$b_pool_payout_count = $row['b_pool_payout_count'];
-		$c_pool_payout_count = $row['c_pool_payout_count'];
-		$w_pool_payout_count = $row['w_pool_payout_count'];
-		$a_pool_payout_schedule = $row['a_pool_payout_schedule'];
-		$b_pool_payout_schedule = $row['b_pool_payout_schedule'];
-		$c_pool_payout_schedule = $row['c_pool_payout_schedule'];
-		$w_pool_payout_schedule = $row['w_pool_payout_schedule'];
-		$a_pool_handicap = $row['a_pool_handicap'];
-		$b_pool_handicap = $row['b_pool_handicap'];
-		$c_pool_handicap = $row['c_pool_handicap'];
-		$w_pool_handicap = $row['w_pool_handicap'];
+    if (isset($row['hill_start_order'])) $hill_start_order = $row['hill_start_order'];
+    if (isset($row['general_start_order'])) $general_start_order = $row['general_start_order'];
+		if (isset($row['amount_to_payout'])) $amount_to_payout = $row['amount_to_payout'];
+		if (isset($row['amount_to_ace_pot'])) $amount_to_ace_pot = $row['amount_to_ace_pot'];
+		if (isset($row['amount_to_course'])) $amount_to_course = $row['amount_to_course'];
+		if (isset($row['amount_to_bonanza'])) $amount_to_bonanza = $row['amount_to_bonanza'];
+    if (isset($row['current_ace_pot'])) $current_ace_pot = $row['current_ace_pot'];
+    if (isset($row['max_ace_pot'])) $max_ace_pot = $row['max_ace_pot'];
+		if (isset($row['a_pool_payout_count'])) $a_pool_payout_count = $row['a_pool_payout_count'];
+		if (isset($row['b_pool_payout_count'])) $b_pool_payout_count = $row['b_pool_payout_count'];
+		if (isset($row['c_pool_payout_count'])) $c_pool_payout_count = $row['c_pool_payout_count'];
+		if (isset($row['w_pool_payout_count'])) $w_pool_payout_count = $row['w_pool_payout_count'];
+		if (isset($row['a_pool_payout_schedule'])) $a_pool_payout_schedule = $row['a_pool_payout_schedule'];
+		if (isset($row['b_pool_payout_schedule'])) $b_pool_payout_schedule = $row['b_pool_payout_schedule'];
+		if (isset($row['c_pool_payout_schedule'])) $c_pool_payout_schedule = $row['c_pool_payout_schedule'];
+		if (isset($row['w_pool_payout_schedule'])) $w_pool_payout_schedule = $row['w_pool_payout_schedule'];
+		if (isset($row['a_pool_handicap'])) $a_pool_handicap = $row['a_pool_handicap'];
+		if (isset($row['b_pool_handicap'])) $b_pool_handicap = $row['b_pool_handicap'];
+		if (isset($row['c_pool_handicap'])) $c_pool_handicap = $row['c_pool_handicap'];
+		if (isset($row['w_pool_handicap'])) $w_pool_handicap = $row['w_pool_handicap'];
 	}
   $hill_start_array = explode ( ',', $hill_start_order );
   $general_start_array = explode ( ',', $general_start_order );

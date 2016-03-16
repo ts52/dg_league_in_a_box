@@ -55,7 +55,7 @@
     if ($course == 'hill'){
       $start_hole = $hill_start_array[$player_count];
     }elseif ($course == 'general'){
-      $start_hole = $general_start_array[$player_count];
+      $start_hole = "W";
     }
 
     $insert_sql = <<<EOF
@@ -90,12 +90,15 @@ EOF;
 		print "<!-- $player_count players are on this hole. -->\n";
 
     print ("Player $firstname $lastname checked in to the $course<br>\n");
-    print ("<h2>Your start hole is $start_hole.</h2>\n");
-		if ($player_count == 1) {
-			print ("Please put your tag on the board, pay and get a scorecard.<br>\n");
+    if ($course == "hill") print ("<h2>Your start hole is $start_hole.</h2>\n");
+		if ($player_count == 1 and $course == "hill") {
+			print ("<h3>Please put your tag on the board, pay and get a scorecard.</h3>\n");
 		} else {
 			print ("Please put your tag on the board and pay.<br>\n");
 		}
+    if ($course == "general"){
+      print "<br><a href='form_general_card.php'>Find other players waiting for a card on the General</a>\n";
+    }
   }
 ?>
 <h3><a href="index.php">Back to check in</a></h3>
