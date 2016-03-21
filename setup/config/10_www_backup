@@ -1,0 +1,5 @@
+#!/bin/sh
+# Exit if both vendor and model name are empty.
+test -n "$UM_VENDOR" || test -n "$UM_MODEL" || test -n "$UM_MOUNTPOINT" || exit 0
+cd /var
+tar -cvf $UM_MOUNTPOINT/`date +%Y%m%d_%H%M%S`_www.tgz www/html
