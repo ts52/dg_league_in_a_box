@@ -18,6 +18,7 @@
 
   $player_count = 0;
   $players_per_pool = array ('A' => 0, 'B' => 0, 'C' => 0, 'W' => 0);
+  $players_per_course = array ('hill' => 0, 'general' => 0 );
   $ace_count = 0;
   $collected = 0;
   $checked_in_players_query = "SELECT * from scores WHERE week IS :week ORDER BY handicap_score,incoming_tag";
@@ -29,13 +30,11 @@
     $collected += $paid;
     $ace = $row['ace'];
     $player_pool = $row['pool'];
+    $course = $row['course'];
     if (!empty($paid)){
       $player_count++;
-      foreach (array('A','B','C','W') as $pool){
-        if ($player_pool == $pool){
-          $players_per_pool[$pool]++;
-        }
-      }
+      $players_per_pool[$player_pool]++;
+      $players_per_course[$course]++;
       if (!empty($ace)) {
         $ace_count++;
       }
@@ -48,7 +47,7 @@
 ?>
 <h3>Player Counts</h3>
 <table border="1">
-<tr><td>Total</td><td>A Pool</td><td>B Pool</td><td>C Pool</td><td>W Pool</td></tr>
+<tr><td>Total</td><td>A Pool</td><td>B Pool</td><td>C Pool</td><td>W Pool</td><td>Hill</td><td>General</td></tr>
 <?php
   print "<tr>\n";
   print "<td>$player_count</td>\n";
@@ -56,6 +55,8 @@
   print "<td>{$players_per_pool['B']}</td>\n";
   print "<td>{$players_per_pool['C']}</td>\n";
   print "<td>{$players_per_pool['W']}</td>\n";
+  print "<td>{$players_per_course['hill']}</td>\n";
+  print "<td>{$players_per_course['general']}</td>\n";
   print "</tr>\n";
 ?>
 </table>
@@ -96,15 +97,7 @@
   print "<tr>\n";
   print "<td>$collected</td>\n";
   foreach (array('A','B','C','W') as $pool){
-    print "<td>{$pool_payout[$pool]}:";
-    $count = 0;
-    while ($count < $payout_count[$pool]){
-      print "{$pool_place_payout[$pool][$count]}";
-      $count++;
-      if ($count < $payout_count[$pool]) {
-        print ":";
-      }
-    }
+    print "<td>{$pool_payout[$pool]}";
     print "</td>\n";
   }
   print "<td>$current_ace_pot</td>\n";
