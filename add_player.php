@@ -18,19 +18,26 @@
 	$lastname = $_POST['lastname'];
 	$pool = $_POST['pool'];
 
-	$insert_sql = <<<EOF
-		INSERT INTO players 
-		    (lastname,firstname,pool)
-		    VALUES
-		    (:lastname,:firstname,:pool);
-EOF;
-	$add_player_stmt = $db->prepare($insert_sql);
+  if ( empty($firstname) or empty($lastname) or empty($pool) ) {
+    if (empty($firstname)) print "ERROR: First Name must not be empty<br>\n";
+    if (empty($lastname)) print "ERROR: Last Name must not be empty<br>\n";
+    if (empty($pool)) print "ERROR: Pool must not be empty<br>\n";
+  } else {
 
-	$add_player_stmt->bindParam(":lastname", $lastname);
-	$add_player_stmt->bindParam(":firstname", $firstname);
-	$add_player_stmt->bindParam(":pool", $pool);
-	$add_player_stmt->execute();
-	print ("Player $firstname $lastname added to $pool pool<br>");
+    $insert_sql = <<<EOF
+      INSERT INTO players 
+          (lastname,firstname,pool)
+          VALUES
+          (:lastname,:firstname,:pool);
+EOF;
+    $add_player_stmt = $db->prepare($insert_sql);
+
+    $add_player_stmt->bindParam(":lastname", $lastname);
+    $add_player_stmt->bindParam(":firstname", $firstname);
+    $add_player_stmt->bindParam(":pool", $pool);
+    $add_player_stmt->execute();
+    print ("Player $firstname $lastname added to $pool pool<br>");
+  }
 ?>
 <h3><a href="index.php">Back to Sign In</a></h3>
 </body>

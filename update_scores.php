@@ -30,26 +30,30 @@
       print "ERROR: no player info found for player id $playerid<br>\n";
     }
 
-    if ($course == 'general') {
-      $handicap_score = $score - $handicap[$pool];
-    } else {
-      $handicap_score = $score;
-    }
+    if (empty($score)) {
+      print "ERROR: No score entered for $firstname $lastname<br>\n";
+    }else{
+      if ($course == 'general') {
+        $handicap_score = $score - $handicap[$pool];
+      } else {
+        $handicap_score = $score;
+      }
 
-    print "Updating score for $firstname $lastname, week $week, to $score : $handicap_score<br>\n";
+      print "Updating score for $firstname $lastname, week $week, to $score : $handicap_score<br>\n";
 
-    $update_sql = <<<EOF
-      UPDATE scores 
-          SET score=:score,ace=:ace,handicap_score=:handicap_score
-          WHERE week IS :week AND playerid IS :playerid;
+      $update_sql = <<<EOF
+        UPDATE scores 
+            SET score=:score,ace=:ace,handicap_score=:handicap_score
+            WHERE week IS :week AND playerid IS :playerid;
 EOF;
-    $update_player_stmt = $db->prepare($update_sql);
-    $update_player_stmt->bindParam(":playerid", $playerid);
-    $update_player_stmt->bindParam(":week", $week);
-    $update_player_stmt->bindParam(":score", $score);
-    $update_player_stmt->bindParam(":ace", $ace);
-    $update_player_stmt->bindParam(":handicap_score", $handicap_score);
-    $update_player_stmt->execute();
+      $update_player_stmt = $db->prepare($update_sql);
+      $update_player_stmt->bindParam(":playerid", $playerid);
+      $update_player_stmt->bindParam(":week", $week);
+      $update_player_stmt->bindParam(":score", $score);
+      $update_player_stmt->bindParam(":ace", $ace);
+      $update_player_stmt->bindParam(":handicap_score", $handicap_score);
+      $update_player_stmt->execute();
+    }
 
     $player_count++;
     $playerid_name = "playerid$player_count";
