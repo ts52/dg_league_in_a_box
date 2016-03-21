@@ -51,7 +51,7 @@ EOF;
 		// rows exist, use update
 		$update_sql = <<<EOF
 			UPDATE config 
-			    SET week=:week, hill_start_order=:hill_start_order, 
+			    SET hill_start_order=:hill_start_order, 
            general_start_order=:general_start_order, amount_to_payout=:amount_to_payout, 
            amount_to_ace_pot=:amount_to_ace_pot, amount_to_course=:amount_to_course,
            amount_to_bonanza=:amount_to_bonanza,
@@ -60,7 +60,8 @@ EOF;
 			     a_pool_payout_schedule=:a_pool_payout_schedule, b_pool_payout_schedule=:b_pool_payout_schedule,
 			     c_pool_payout_schedule=:c_pool_payout_schedule, w_pool_payout_schedule=:w_pool_payout_schedule,
 			     a_pool_handicap=:a_pool_handicap, b_pool_handicap=:b_pool_handicap,
-			     c_pool_handicap=:c_pool_handicap, w_pool_handicap=:w_pool_handicap;
+			     c_pool_handicap=:c_pool_handicap, w_pool_handicap=:w_pool_handicap
+      WHERE week IS :week ;
 EOF;
 		$cfg_update_stmt = $db->prepare($update_sql);
 	}
