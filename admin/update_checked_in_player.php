@@ -16,6 +16,11 @@
   $payout = $_POST['payout'];
   $place_in_pool = $_POST['place_in_pool'];
 
+  if ( ! empty ( $course ) and ! empty( $score ) and empty( $handicap_score ) and ! empty( $pool ) ) {
+    $handicap_score = $score;
+    if ( $course == 'general' ) $handicap_score = $score - $handicap[$pool];
+  }
+
   // Check to make sure hole isn't full, then update scores table
 
   $player_query = "SELECT * from players WHERE playerid IS :playerid";
