@@ -152,14 +152,12 @@
       print ("</tr>");
       print ("</form>");
     }
-    if ($player_count == 0){
-      print "<h3><a href=generate_results.php>Generate Results</a></h3>\n";
-    } else {
+    if ($player_count > 0){
       print ("</table>");
     }
-  } else if ($system_state == 'closed'){
-      print "<h3><a href=show_results.php>Results</a></h3>\n";
   }
+      print "<h3><a href=generate_results.php>Calculate Results</a></h3>\n";
+      print "<h3><a href=show_results.php>Show Results</a></h3>\n";
 ?>
 
 <h3><a href="config_update.php">Edit configuration</a></h3>
@@ -186,16 +184,20 @@
     $course = $row['course'];
     $incoming_tag = $row['incoming_tag'];
     $start_hole = $row['start_hole'];
-    $paid = $row['paid'];
+		$row_color = "";
+		if ($incoming_tag == 9999) {
+			$incoming_tag = "NO TAG";
+			$row_color = "bgcolor=\"#FFFF00\"";
+		}
     print ("<input type='hidden' name=\"$playerid_field\" value=\"$playerid\" >");
-    print ("<tr><td>$firstname $lastname</td>");
+    print ("<tr $row_color><td>$firstname $lastname</td>");
     print ("<td>$pool</td>\n");
     print ("<td>$course</td>\n");
     print ("<td>$start_hole</td>\n");
     print ("<td>$incoming_tag</td>\n");
 
     print ("<td>");
-    print ("<input type='text' name=\"$paid_field\" value=\"$paid\" size='2' >");
+    print ("<input type='text' name=\"$paid_field\" size='2' >");
     print ("</td>");
     print ("</tr>");
     $player_count++;
