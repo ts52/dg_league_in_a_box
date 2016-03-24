@@ -1,3 +1,17 @@
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<style>
+  table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
+  th, td {
+    padding: 7px;
+  }
+</style>
+<body>
 <?php
 	$db_file = './dg_league.db';
 	include './db_setup.php';
@@ -61,3 +75,5 @@ EOF;
 
 ?>
 <h3><a href="index.php">Back</a></h3>
+</body>
+</html>
