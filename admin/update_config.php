@@ -9,6 +9,8 @@
 	$amount_to_ace_pot = $_POST['amount_to_ace_pot'];
 	$amount_to_course = $_POST['amount_to_course'];
 	$amount_to_bonanza = $_POST['amount_to_bonanza'];
+  $current_ace_pot = $_POST['current_ace_pot'];
+  $max_ace_pot = $_POST['max_ace_pot'];
 	$a_pool_payout_count = $_POST['a_pool_payout_count'];
 	$a_pool_payout_schedule = $_POST['a_pool_payout_schedule'];
 	$b_pool_payout_count = $_POST['b_pool_payout_count'];
@@ -36,12 +38,14 @@
 			INSERT INTO config 
 			    (week,hill_start_order,general_start_order,
            amount_to_payout,amount_to_ace_pot,amount_to_course,amount_to_bonanza,
+           current_ace_pot,max_ace_pot,
 			     a_pool_payout_count,b_pool_payout_count,c_pool_payout_count,w_pool_payout_count,
 			     a_pool_payout_schedule,b_pool_payout_schedule,c_pool_payout_schedule,w_pool_payout_schedule,
 			     a_pool_handicap,b_pool_handicap,c_pool_handicap,w_pool_handicap)
 			    VALUES
 			    (:week,:hill_start_order,:general_start_order,
            :amount_to_payout,:amount_to_ace_pot,:amount_to_course,:amount_to_bonanza,
+           :current_ace_pot,:max_ace_pot,
 			     :a_pool_payout_count,:b_pool_payout_count,:c_pool_payout_count,:w_pool_payout_count,
 			     :a_pool_payout_schedule,:b_pool_payout_schedule,:c_pool_payout_schedule,:w_pool_payout_schedule,
 			     :a_pool_handicap,:b_pool_handicap,:c_pool_handicap,:w_pool_handicap );
@@ -54,7 +58,7 @@ EOF;
 			    SET hill_start_order=:hill_start_order, 
            general_start_order=:general_start_order, amount_to_payout=:amount_to_payout, 
            amount_to_ace_pot=:amount_to_ace_pot, amount_to_course=:amount_to_course,
-           amount_to_bonanza=:amount_to_bonanza,
+           amount_to_bonanza=:amount_to_bonanza, current_ace_pot=:current_ace_pot, max_ace_pot=:max_ace_pot,
 			     a_pool_payout_count=:a_pool_payout_count, b_pool_payout_count=:b_pool_payout_count,
 			     c_pool_payout_count=:c_pool_payout_count, w_pool_payout_count=:w_pool_payout_count,
 			     a_pool_payout_schedule=:a_pool_payout_schedule, b_pool_payout_schedule=:b_pool_payout_schedule,
@@ -72,6 +76,8 @@ EOF;
 	$cfg_update_stmt->bindParam(":amount_to_ace_pot", $amount_to_ace_pot);
 	$cfg_update_stmt->bindParam(":amount_to_course", $amount_to_course);
 	$cfg_update_stmt->bindParam(":amount_to_bonanza", $amount_to_bonanza);
+	$cfg_update_stmt->bindParam(":current_ace_pot", $current_ace_pot);
+	$cfg_update_stmt->bindParam(":max_ace_pot", $max_ace_pot);
 	$cfg_update_stmt->bindParam(":a_pool_payout_count", $a_pool_payout_count);
 	$cfg_update_stmt->bindParam(":b_pool_payout_count", $b_pool_payout_count);
 	$cfg_update_stmt->bindParam(":c_pool_payout_count", $c_pool_payout_count);
