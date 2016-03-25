@@ -10,9 +10,9 @@
     print "<h3>Check in</h3>";
     print "Current week is $week<br>";
     print "<form action='check_in_search.php' method='post'>";
-    print "<input type='radio' name='course' value='hill'>The Hill</input>  ";
-    print "<input type='radio' name='course' value='general'>The General</input><br>";
-    print "Last Name: <input type='text' name='lastname'><br>";
+    print "<input type='radio' name='course' value='hill' required>The Hill</input>  ";
+    print "<input type='radio' name='course' value='general' required>The General</input><br>";
+    print "Last Name: <input type='text' name='lastname' required><br>";
     print ('<input type="submit" value="Submit">');
     print ('</form>');
   } elseif ($system_state == 'score_entry') {
