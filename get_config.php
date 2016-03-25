@@ -13,9 +13,7 @@
   }
 
   $hill_start_order = "1,2,3,5,6,11,13,14,18,17,1,2,3,5,6,11,13,14,18,17,1,2,3,5,6,11,13,14,18,17,1,2,3,5,6,11,13,14,18,17,10,10,10,10,12,12,12,12,15,15,15,15,16,16,16,16,4,4,4,4,9,9,9,9,8,8,8,8,7,7,7,7";
-  $hill_max_players = 72;
-  $general_start_order = "1a,4a,12a,9a,1b,12b,9b,1c,9c";
-  $general_max_players = 36;
+  $general_start_order = "1a,14a,12a,9a,1b,12b,9b,1c,12c,9c,18a";
 	$amount_to_payout = 2.25;
 	$amount_to_ace_pot = 0.75;
 	$amount_to_course = 1;
@@ -62,8 +60,10 @@
 	}
   $hill_start_array = explode ( ',', $hill_start_order );
   $hill_start_count = count($hill_start_array);
+  $hill_max_players = $hill_start_count;
   $general_start_array = explode ( ',', $general_start_order );
   $general_start_count = count($general_start_array);
+  $general_max_players = $general_start_count * 4;
   $payout_count = array();
   $payout_count['A'] = $a_pool_payout_count;
   $payout_count['B'] = $b_pool_payout_count;
