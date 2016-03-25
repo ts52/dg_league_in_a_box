@@ -32,27 +32,34 @@
     $card_count = 0;
     $taken_holes = array();
     while ( $row = $gcq_ret->fetchArray(SQLITE3_ASSOC) ) {
+      print "<!-- DEBUG: checking if hole {$row['start_hole']} is unique -->\n";
       if (empty($taken_holes[$row['start_hole']])) {
+        print "<!-- DEBUG: It is! -->\n";
         $card_count++;
         $taken_holes[$row['start_hole']] = TRUE;
       }
     }
     print "<!-- DEBUG card count is $card_count -->\n";
-    $start_hole = $general_start_array[$card_count];
-    print "<!-- DEBUG start hole is $start_hole-->\n";
-    $player_update = "UPDATE scores SET start_hole=:start_hole WHERE week IS :week AND playerid IS :playerid ;";
-    $pu_stmt = $db->prepare($player_update);
-    $pu_stmt->bindParam(":week",$week);
-    $pu_stmt->bindParam(":start_hole",$start_hole);
-    foreach ( $playerids as $playerid ) {
-      $pu_stmt->reset();
-      $pu_stmt->bindParam(":playerid",$playerid);
-      $ret = $pu_stmt->execute();
-      if ( ! $ret ) {
-        print "ERROR: Failed to update playerid $playerid<br>\n";
+    if ($card_count >= $general_start_count) {
+      print "<!-- DEBUG ERROR card_count:$card_count bigger than general_start_count:$general_start_count -->\n";
+      print "<h3>ERROR: The general is full!<h3>\n";
+    } else {
+      $start_hole = $general_start_array[$card_count];
+      print "<!-- DEBUG start hole is $start_hole-->\n";
+      $player_update = "UPDATE scores SET start_hole=:start_hole WHERE week IS :week AND playerid IS :playerid ;";
+      $pu_stmt = $db->prepare($player_update);
+      $pu_stmt->bindParam(":week",$week);
+      $pu_stmt->bindParam(":start_hole",$start_hole);
+      foreach ( $playerids as $playerid ) {
+        $pu_stmt->reset();
+        $pu_stmt->bindParam(":playerid",$playerid);
+        $ret = $pu_stmt->execute();
+        if ( ! $ret ) {
+          print "ERROR: Failed to update playerid $playerid<br>\n";
+        }
       }
+      print "<h3>Assigned to hole $start_hole</h3>\n";
     }
-    print "<h3>Assigned to hole $start_hole</h3>\n";
   } else {
     print "<!-- DEBUG no POST -->\n";
     $waiting_player_query = "SELECT * from scores WHERE week IS :week AND course IS :course AND start_hole IS :start_hole; ";
