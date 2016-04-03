@@ -20,7 +20,7 @@
 <h3>All Players</h3>
 <?php
   $row_count = 0;
-  $registered_players_query = "SELECT * from players ; ";
+  $registered_players_query = "SELECT * from players ORDER BY lastname ; ";
   $rpq_ret = $db->query($registered_players_query);
   while ($row = $rpq_ret->fetchArray(SQLITE3_ASSOC) ){
     if ($row_count == 0){
@@ -43,6 +43,7 @@
   }
   if ($row_count > 0){
     print "</table>\n";
+    print "<p>There are $row_count registered players.</p>\n";
   }
 ?>
 
