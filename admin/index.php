@@ -21,7 +21,10 @@
 
 <?php
 	print ('<form action="update_current_state.php" method="post">');
-	print ("Current Week Number: <input type='text' name='week' value=$week><br>");
+	print ("Current Week Number: <input type='text' name='week' value=$week>\n");
+  print "<input type='submit' value='Update Week'><br>\n";
+  print "</form>\n";
+	print ('<form action="update_current_state.php" method="post">');
 	print ("System State: <select type='text' name='system_state'>");
   print ("<option value='check_in_open'");
   if ($system_state == 'check_in_open') {
@@ -38,9 +41,19 @@
     print (" selected");
   }
   print (">Closed</option>");
-  print ("</select><br>");
+  print ("</select>");
 	print ('<input type="submit" value="Update State">');
 	print ('</form>');
+
+	print ('<form action="update_current_state.php" method="post">');
+  if ($general_open) {
+    print "<input type='hidden' name='general_open' value='0'>\n";
+    print "<input type='submit' value='Close the General'>\n";
+  } else {
+    print "<input type='hidden' name='general_open' value='1'>\n";
+    print "<input type='submit' value='Open the General'>\n";
+  }
+  print "</form>\n";
 ?>
 
 <?php
