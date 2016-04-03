@@ -43,7 +43,7 @@ print "<!-- DEBUG after count loop -->\n";
     print "<br>\n";
     print "<form action='check_in_search.php' method='post'>";
     if ($hill_player_count < $hill_max_players) print "<input type='radio' name='course' value='hill' required>The Hill</input><br>";
-    if ($general_player_count < $general_max_players) print "<input type='radio' name='course' value='general' required>The General</input><br>";
+    if ($general_open and ($general_player_count < $general_max_players) ) print "<input type='radio' name='course' value='general' required>The General</input><br>";
     print "Last Name: <input type='text' name='lastname' required><br>";
     print ('<input type="submit" value="Submit">');
     print ('</form>');

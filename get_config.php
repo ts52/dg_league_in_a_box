@@ -4,12 +4,20 @@
 
 	$week = -1;
 	$system_state = "closed";
+  $current_ace_pot = 0;
+  $bonanza_fund = 0;
+  $course_fund = 0;
+  $general_open = 1;
 
   $current_state_query = "SELECT * from current_state ;";
   $cs_ret = $db->query($current_state_query);
   while ( $row = $cs_ret->fetchArray(SQLITE3_ASSOC) ) {
-    $week = $row['week'];
-    $system_state = $row['system_state'];
+    if (isset($row['week'])) $week = $row['week'];
+    if (isset($row['system_state'])) $system_state = $row['system_state'];
+    if (isset($row['current_ace_pot'])) $current_ace_pot = $row['current_ace_pot'];
+    if (isset($row['bonanza_fund'])) $bonanza_fund = $row['bonanza_fund'];
+    if (isset($row['course_fund'])) $course_fund = $row['course_fund'];
+    if (isset($row['general_open'])) $general_open = $row['general_open'];
   }
 
   $hill_start_order = "1,2,3,5,6,11,13,14,18,17,1,2,3,5,6,11,13,14,18,17,1,2,3,5,6,11,13,14,18,17,1,2,3,5,6,11,13,14,18,17,10,10,10,10,12,12,12,12,15,15,15,15,16,16,16,16,4,4,4,4,9,9,9,9,8,8,8,8,7,7,7,7";
@@ -18,7 +26,6 @@
 	$amount_to_ace_pot = 0.75;
 	$amount_to_course = 1;
 	$amount_to_bonanza = 1;
-  $current_ace_pot = 0;
   $max_ace_pot = 250;
 	$a_pool_payout_count = 5;
 	$b_pool_payout_count = 5;
@@ -43,7 +50,6 @@
 		if (isset($row['amount_to_ace_pot'])) $amount_to_ace_pot = $row['amount_to_ace_pot'];
 		if (isset($row['amount_to_course'])) $amount_to_course = $row['amount_to_course'];
 		if (isset($row['amount_to_bonanza'])) $amount_to_bonanza = $row['amount_to_bonanza'];
-    if (isset($row['current_ace_pot'])) $current_ace_pot = $row['current_ace_pot'];
     if (isset($row['max_ace_pot'])) $max_ace_pot = $row['max_ace_pot'];
 		if (isset($row['a_pool_payout_count'])) $a_pool_payout_count = $row['a_pool_payout_count'];
 		if (isset($row['b_pool_payout_count'])) $b_pool_payout_count = $row['b_pool_payout_count'];

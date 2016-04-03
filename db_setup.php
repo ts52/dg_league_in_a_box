@@ -19,7 +19,11 @@ EOD;
   $current_state_table_create = <<<EOD
 CREATE TABLE IF NOT EXISTS current_state (
   week INTEGER,
-  system_state STRING );
+  system_state STRING,
+  general_open INTEGER,
+  current_ace_pot DOUBLE,
+  bonanza_fund DOUBLE,
+  course_fund DOUBLE );
 EOD;
   $db->exec($current_state_table_create) or die('Create current_state db failed');
 
@@ -34,7 +38,6 @@ EOD;
 		amount_to_ace_pot DOUBLE,
 		amount_to_course DOUBLE,
 		amount_to_bonanza DOUBLE,
-    current_ace_pot DOUBLE,
     max_ace_pot DOUBLE,
 		a_pool_payout_count INTEGER,
 		b_pool_payout_count INTEGER,
