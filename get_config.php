@@ -14,7 +14,7 @@
   while ( $row = $cs_ret->fetchArray(SQLITE3_ASSOC) ) {
     if (isset($row['week'])) $week = $row['week'];
     if (isset($row['system_state'])) $system_state = $row['system_state'];
-    if (isset($row['current_ace_pot'])) $current_ace_pot = $row['current_ace_pot'];
+//    if (isset($row['current_ace_pot'])) $current_ace_pot = $row['current_ace_pot'];
     if (isset($row['bonanza_fund'])) $bonanza_fund = $row['bonanza_fund'];
     if (isset($row['course_fund'])) $course_fund = $row['course_fund'];
     if (isset($row['general_open'])) $general_open = $row['general_open'];
@@ -50,6 +50,8 @@
 		if (isset($row['amount_to_ace_pot'])) $amount_to_ace_pot = $row['amount_to_ace_pot'];
 		if (isset($row['amount_to_course'])) $amount_to_course = $row['amount_to_course'];
 		if (isset($row['amount_to_bonanza'])) $amount_to_bonanza = $row['amount_to_bonanza'];
+// remove when reading/writing from current state
+    if (isset($row['current_ace_pot'])) $current_ace_pot = $row['current_ace_pot'];
     if (isset($row['max_ace_pot'])) $max_ace_pot = $row['max_ace_pot'];
 		if (isset($row['a_pool_payout_count'])) $a_pool_payout_count = $row['a_pool_payout_count'];
 		if (isset($row['b_pool_payout_count'])) $b_pool_payout_count = $row['b_pool_payout_count'];
