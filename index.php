@@ -39,7 +39,11 @@ print "<!-- DEBUG after count loop -->\n";
     print "<h3>Check in</h3>";
     print "Current week is $week<br>";
     print "The Hill is $hill_player_count/$hill_max_players full.<br>\n";
-    print "The General is $general_player_count/$general_max_players full.<br>\n";
+    if ($general_open) {
+      print "The General is $general_player_count/$general_max_players full.<br>\n";
+    } else {
+      print "The General is closed.<br>\n";
+    }
     print "<br>\n";
     print "<form action='check_in_search.php' method='post'>";
     if ($hill_player_count < $hill_max_players) print "<input type='radio' name='course' value='hill' required>The Hill</input><br>";
