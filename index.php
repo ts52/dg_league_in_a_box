@@ -2,6 +2,11 @@
 <!-- Initial state shows an admin login, which leads to ./admin after login to configure and control things -->
 <!-- When the admin has 'opened up sign in', this page will show the sign in -->
 <!-- After sign in is closed, this page will switch to score entry -->
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
 <?php
 	$db_file = './dg_league.db';
 	include './db_setup.php';
@@ -63,3 +68,5 @@ print "<!-- DEBUG after count loop -->\n";
     print ("Check in not open<br>");
   }
 ?>
+</body>
+</html>
