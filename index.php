@@ -26,6 +26,8 @@
 		} else {
 		}
 	} elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
+		$admin_request = 0;
+		if (isset($_POST['admin_request'])) $admin_request = 1;
 		if ($_POST['function'] == 'check_in_search'){
 			$lastname = $_POST['lastname'];
 			$course = $_POST['course'];
@@ -123,7 +125,7 @@
 					}
 				}
 
-				if ( $course_closed ) { 
+				if ( $course_closed and not $admin_request ) { 
 					print "<h1>The {$course} is closed.</h1> <h1><a href='index.php'>Please try the other course.</a></h1>\n";
 				} else {
 
