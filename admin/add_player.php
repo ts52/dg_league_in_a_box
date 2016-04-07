@@ -12,8 +12,8 @@
 </head>
 <body>
 <?php
-	$db_file = './dg_league.db';
-	include './db_setup.php';
+	$db_file = '../dg_league.db';
+	include '../db_setup.php';
 	$firstname = $_POST['firstname'];
 	$lastname = $_POST['lastname'];
 	$pool = $_POST['pool'];
@@ -39,6 +39,6 @@ EOF;
     print ("Player $firstname $lastname added to $pool pool<br>");
   }
 ?>
-<h3><a href="index.php">Back to Sign In</a></h3>
+<h3><a href="/admin/index.php">Back to Admin</a></h3>
 </body>
 </html>

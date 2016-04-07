@@ -28,9 +28,12 @@
 	} elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
 		$admin_request = 0;
 		if (isset($_POST['admin_request'])) $admin_request = 1;
-		if ($_POST['function'] == 'check_in_search'){
+		$function = $_POST['function'];
+		if ($function == 'check_in_search'){
 			$lastname = $_POST['lastname'];
 			$course = $_POST['course'];
+			$remember = $_POST['remember'];
+			if ($remember) $_SESSION["lastname"] = $lastname;
 
 			$player_query = "SELECT * from players WHERE lastname LIKE :lastname;";
 			$pq_stmt = $db->prepare($player_query);
@@ -57,11 +60,12 @@
 					$pool = $row['pool'];
 					print "<form action='index.php' method='post'>";
 					print "<input type='hidden' name='function' value='check_in_player'/>\n";
+					if ($remember) print "<input type='hidden' name='remember' value='1'/>\n";
 					$selected = "";
 					if ($matching_player_count == 1) {
 						$selected = "checked";
 					}
-					print "<input type='radio' name='playerid' $selected value=$playerid>$firstname $lastname ID#:$playerid Pool:$pool</input><br>";
+					print "<input type='radio' name='playerid' $selected value=$playerid>$firstname $lastname : $pool Pool</input><br>";
 				}
 				if ($row_count != 0) {
 					// close table
@@ -72,14 +76,16 @@
 					print "<hr>";
 				}
 			}
-		} elsif ($_POST['function'] == 'check_in_player') {
+		} elseif ($function == 'check_in_player') {
 			$playerid = $_POST['playerid'];
 			$course = $_POST['course'];
 			$incoming_tag = $_POST['incoming_tag'];
+			$remember = $_POST['remember'];
 
 			if (empty($playerid)){
 				print "ERROR: Trying to check in an empty playerid<br>\n";
 			}else{
+				if ($remember) $_SESSION["playerid"] = $playerid;
 				$pay_amount = '$5';
 				if (empty($incoming_tag)){
 					$pay_amount = '$7';
@@ -125,7 +131,7 @@
 					}
 				}
 
-				if ( $course_closed and not $admin_request ) { 
+				if ( $course_closed and !	$admin_request ) { 
 					print "<h1>The {$course} is closed.</h1> <h1><a href='index.php'>Please try the other course.</a></h1>\n";
 				} else {
 
@@ -220,7 +226,7 @@ EOF;
 					}
 				}
 			}
-		} elsif ($_POST['function'] == 'score_entry_search') {
+		} elseif ($function == 'score_entry_search') {
 			$lastname = $_POST['lastname'];
 			$playerid = $_POST['playerid'];
 
@@ -254,7 +260,8 @@ EOF;
 				print "<!--DEBUG: more than 1 matching player-->\n";
 				print "<!--DEBUG: row_count = $row_count-->\n";
 				// more than one matching last name on the course
-				print "<form action'score_entry_search.php' method='post'>\n";
+				print "<form action'index.php' method='post'>\n";
+				print "<input type='hidden' name='function' value='score_entry_search'/>\n";
 				$pq_ret->reset();
 				$row_count = 0;
 				while ($row = $pq_ret->fetchArray(SQLITE3_ASSOC) ){
@@ -361,7 +368,7 @@ EOF;
 				print "<!-- DEBUG: general_hole $hole is already taken -->\n";
 				$general_player_count += 4;
 			}
-			print "<h3>Check in</h3>";
+			print "<h3>Check In</h3>";
 			print "Current week is $week<br>";
 			print "The Hill is $hill_player_count/$hill_max_players full.<br>\n";
 			if ($general_open) {
@@ -372,11 +379,20 @@ EOF;
 			print "<br>\n";
 			print "<form action='index.php' method='post'>";
 			print "<input type='hidden' name='function' value='check_in_search'/>\n";
-			if ($hill_player_count < $hill_max_players) print "<input type='radio' name='course' value='hill' required>The Hill</input><br>";
-			if ($general_open and ($general_player_count < $general_max_players) ) print "<input type='radio' name='course' value='general' required>The General</input><br>";
+			$selected = "";
+			if ( ( ! $general_open ) or ( $general_player_count >= $general_max_players ) or ( $hill_player_count >= $hill_max_players ) ) $selected = "checked";
+			if ($hill_player_count < $hill_max_players) {
+				print "<input type='radio' name='course' value='hill' {$selected} required>The Hill</input><br>\n";
+			}
+			if ($general_open and ($general_player_count < $general_max_players) ) {
+			 	print "<input type='radio' name='course' value='general' {$selected} required>The General</input><br>\n";
+			}
 			print "Last Name: <input type='text' name='lastname' required><br>";
+			print "<input type='checkbox' name='remember' value='1' checked>Remember Me<br>\n";
 			print ('<input type="submit" value="Submit"/>');
 			print ('</form>');
+			print "<br>\n";
+			print "<h3><a href='form_general_card.php'>General Waiting List</a></h3>\n";
 		} elseif ($system_state == 'score_entry') {
 			print ("<h3>Score Entry</h3>");
 			print "Current week is $week<br>";

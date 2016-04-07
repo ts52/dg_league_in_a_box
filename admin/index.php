@@ -1,5 +1,6 @@
 <html>
 <head>
+<meta http-equiv="refresh" content="10" >
 </head>
 <style>
   table, th, td {
@@ -413,6 +414,14 @@
 ?>
 
 <h3><a href="registered_players.php">Registered Players</a></h3>
+
+<h3>Add a new player?</h3>
+<form action='add_player.php' method='post'>
+First Name: <input type='text' name='firstname'><br>
+Last Name: <input type='text' name='lastname'><br>
+Pool: <select name = 'pool'><option value='A'>A</option><option value='B'>B</option><option value='C'>C</option><option value='W'>W</option></select><br>
+<input type="submit" value="Submit">
+</form>
 
 <?php print "<h3><a href=\"$db_file\">Download DB Backup</a></h3>\n"; ?>
 <h3><a href="shutdown.php">Shutdown the system</a></h3>
