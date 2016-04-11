@@ -26,7 +26,7 @@
 		if ($function == 'check_in_search'){
 			check_in_search($db);
 		} elseif ($function == 'check_in_player') {
-			check_in_player($db, $week, $hill_max_players, $general_open, $general_max_players);
+			check_in_player($db, $week, $hill_max_players, $general_open, $general_max_players, $hill_start_array);
 		} elseif ($function == 'score_entry_search') {
 			score_entry_search($_POST['playerid'], $_POST['lastname'], $db, $week);
 		} elseif ($function == 'update_scores') {
@@ -175,7 +175,7 @@
 		}
 	}
 
-	function check_in_player($db, $week, $hill_max_players, $general_open, $general_max_players) {
+	function check_in_player($db, $week, $hill_max_players, $general_open, $general_max_players, $hill_start_array) {
 		$admin_request = 0;
 		if (isset($_POST['admin_request'])) $admin_request = 1;
 		$playerid = $_POST['playerid'];
@@ -283,6 +283,8 @@
 						$start_hole = "W";
 					}
 
+//					print "<p>DEBUG: Selected start_hole:{$start_hole} by player_count:{$player_count}</p>\n";
+
 					$insert_sql = <<<EOF
 						INSERT INTO scores
 								(playerid,lastname,firstname,pool,week,course,incoming_tag,start_hole)
@@ -299,7 +301,12 @@ EOF;
 					$add_player_stmt->bindParam(":course", $course);
 					$add_player_stmt->bindParam(":incoming_tag", $incoming_tag);
 					$add_player_stmt->bindParam(":start_hole", $start_hole);
-					$add_player_stmt->execute();
+					$ap_ret = $add_player_stmt->execute();
+
+					if (! $ap_ret ){
+						print "<p>ERROR: add player insert into scores table failed</p>\n";
+						print "<p>SQL ERROR: {$db->lastErrorMsg()}</p>\n";
+					}
 
 					print "<!-- DEBUG: Confirming check in by reading back from db -->\n";
 					$player_query = "SELECT * from scores WHERE week IS :week AND playerid IS :playerid ;";
@@ -316,7 +323,8 @@ EOF;
 						$start_hole = $row['start_hole'];
 					}
 					if ($row_count != 1){
-						print "<h2>Something went wrong</h2>\nPlease see Luke or Tim\n";
+						print "<h2>Something went wrong</h2>\n<p>Please see Luke or Tim</p>\n";
+						print "<p>DEBUG: found {$row_count} entries matching playerid:{$playerid} and week:{$week}</p>\n";
 					}else{
 						print "<!-- Checking how many players already on hole $start_hole on the $course -->\n";
 						$hole_query = "SELECT * from scores WHERE week IS :week AND course IS :course AND start_hole IS :start_hole";

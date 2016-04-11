@@ -307,8 +307,8 @@
 	$player_count = 0;
   while ($row = $cipq_ret->fetchArray(SQLITE3_ASSOC) ){
     if ($player_count == 0){
-      print ("<table border='1'>");
-      print ("<tr><td>Player</td><td>Pool</td><td>Course</td><td>Starting Hole</td><td>Tag#</td><td>Paid</td><td>Score</td><td>Handicap Score</td><td>Ace Hole</td><td>Points</td><td>Payout</td><td>Place (in pool)</td><td></td></tr>");
+      print ("<table border='1'>\n");
+      print ("<tr><td>Player</td><td>Pool</td><td>Course</td><td>Starting Hole</td><td>Tag#</td><td>Paid</td><td>Score</td><td>Handicap Score</td><td>Ace Hole</td><td>Points</td><td>Payout</td><td>Place (in pool)</td><td></td><td></td></tr>\n");
     }
     $player_count++;
     $playerid = $row['playerid'];
@@ -325,11 +325,11 @@
     $points = $row['points'];
     $payout = $row['payout'];
     $place_in_pool = $row['place_in_pool'];
-    print ("<form action='update_checked_in_player.php' method='post'>");
-    print ("<input type='text' name='playerid' value=$playerid hidden>");
-    print ("<tr><td>$firstname $lastname</td>");
-    print ("<td>");
-    print ("<select type='text' name='pool'>");
+    print ("<tr><td>$firstname $lastname</td>\n");
+    print ("<form action='update_checked_in_player.php' method='post'>\n");
+    print ("<input type='text' name='playerid' value=$playerid hidden>\n");
+    print ("<td>\n");
+    print ("<select type='text' name='pool'>\n");
     print ("<option value='A'");
     if ( $pool == "A" ) {
       print (" selected");
@@ -403,8 +403,14 @@
     print ("</td>");
 
     print ("<td><input type='submit' value='Update'</td>");
-    print ("</tr>");
     print ("</form>");
+		print "<td>\n";
+		print "<form action='delete_from_scores.php' method='post'>\n";
+		print "<input type='hidden' name='playerid' value=\"{$playerid}\">\n";
+    print "<input type='submit' value='DELETE'>\n";
+		print "</form>\n";
+		print "</td>\n";
+    print "</tr>\n";
   }
   if ($player_count == 0){
     print ("No players checked in for week $week<br>");
